@@ -19,28 +19,30 @@
         .view.active { display: block; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* KARTY PRODUKTÓW */
+        /* LISTA PRODUKTÓW */
+        .grid-header { border-bottom: 1px solid #334155; margin-bottom: 20px; padding-bottom: 10px; }
         .product-list-card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #334155; margin-bottom: 15px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: 0.2s; }
         .product-list-card:hover { border-color: var(--accent); transform: scale(1.01); }
         .img-preview { width: 60px; height: 60px; background: #0f172a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent); }
 
-        /* PROFILE I FORMULARZE */
-        .product-profile, .auth-box { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid #334155; }
+        /* PROFIL PRODUKTU */
+        .product-profile { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid #334155; }
         .p-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; }
         @media (max-width: 600px) { .p-grid { grid-template-columns: 1fr; } }
         
         .main-img { aspect-ratio: 1; background: #0f172a; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--accent); border: 1px solid #334155; }
+        .price-tag { font-size: 1.8rem; font-weight: bold; color: var(--accent); margin: 10px 0; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
+        .badge-green { background: rgba(16, 185, 129, 0.2); color: var(--green); }
         
-        input, select, .btn-buy, .btn-auth { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; box-sizing: border-box; }
-        input { background: #0f172a; color: white; border: 1px solid #334155; }
-        .btn-buy, .btn-auth { background: var(--accent); color: var(--bg); border: none; transition: 0.3s; text-transform: uppercase; }
+        select, .btn-buy { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+        select { background: #0f172a; color: white; border: 1px solid var(--accent); }
+        .btn-buy { background: var(--accent); color: var(--bg); border: none; transition: 0.3s; }
         .btn-buy:hover { background: #7dd3fc; }
 
         /* KOSZYK */
-        .cart-item { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
+        .cart-item { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .back-btn { color: var(--accent); cursor: pointer; margin-bottom: 20px; display: inline-block; }
-        
-        .inpost-shipping { border: 2px dashed #ffcc00; padding: 10px; border-radius: 10px; color: #ffcc00; margin: 10px 0; display: flex; justify-content: space-between; }
         
         footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.8rem; }
     </style>
@@ -50,32 +52,11 @@
 <div class="nav-bar">
     <div class="nav-link" onclick="showView('services')">Modyfikacje</div>
     <div class="nav-link" onclick="showView('shop')">Sklep</div>
-    <div class="nav-link" onclick="handleCartClick()">Koszyk</div>
-    <div class="cart-status" onclick="handleCartClick()"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span> zł</div>
+    <div class="nav-link" onclick="showView('contact')">Kontakt</div>
+    <div class="cart-status" onclick="showView('cart')"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span> zł</div>
 </div>
 
 <div class="container">
-
-    <div id="auth" class="view">
-        <div class="auth-box">
-            <h2>Załóż konto / Zaloguj się</h2>
-            <p style="font-size: 0.9rem; color: #94a3b8;">Musisz być zalogowany, aby dokonać zakupu.</p>
-            <input type="text" id="user-login" placeholder="Nazwa konta">
-            <input type="tel" id="user-phone" placeholder="Numer telefonu">
-            <input type="password" id="user-pass" placeholder="Hasło">
-            <button class="btn-auth" onclick="sendSmsCode()">Załóż konto i wyślij kod SMS</button>
-        </div>
-    </div>
-
-    <div id="sms-verify" class="view">
-        <div class="auth-box" style="text-align: center;">
-            <i class="fas fa-mobile-alt" style="font-size: 3rem; color: var(--accent); margin-bottom: 15px;"></i>
-            <h2>Potwierdź telefon</h2>
-            <p>Wpisz kod, który wysłaliśmy na Twój telefon:</p>
-            <input type="text" id="sms-input" placeholder="Wpisz kod" style="text-align: center; font-size: 1.5rem; letter-spacing: 5px;">
-            <button class="btn-auth" style="margin-top: 20px;" onclick="completeAuth()">Potwierdź i wejdź do koszyka</button>
-        </div>
-    </div>
 
     <div id="services" class="view active">
         <h2 class="grid-header">Serwis i Softmod PS2</h2>
@@ -126,41 +107,20 @@
     </div>
 
     <div id="cart" class="view">
-        <h2>Twoje Zamówienie</h2>
+        <h2>Twój Koszyk</h2>
         <div id="cart-content"></div>
-        <div class="inpost-shipping">
-            <span><i class="fas fa-box"></i> Wysyłka InPost (Paczkomat)</span>
-            <strong>+15 zł</strong>
-        </div>
         <div style="text-align: right; margin-top: 20px;">
-            <p style="font-size: 1.5rem;">Do zapłaty: <span id="total-val" style="color:var(--accent)">0</span> zł</p>
-        </div>
-
-        <div class="auth-box" style="margin-top: 20px;">
-            <h3>Dane do wysyłki</h3>
-            <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px;">Obsługujemy tylko paczkomaty InPost.</p>
-            <input type="text" id="ship-address" placeholder="Kod paczkomatu (np. KRA01M) lub adres">
-            <button class="btn-buy" style="margin-top: 15px; background: var(--green); color: white;" onclick="goToBlik()">PRZEJDŹ DO PŁATNOŚCI BLIK</button>
+            <p style="font-size: 1.5rem;">Suma: <span id="total-val" style="color:var(--accent)">0</span> zł</p>
+            <button class="btn-buy" style="max-width: 300px;" onclick="showView('contact')">ZAMÓW PRZEZ DISCORD</button>
         </div>
     </div>
 
-    <div id="blik-view" class="view">
-        <div class="auth-box" style="text-align: center;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/BLIK_logo.svg/1200px-BLIK_logo.svg.png" width="100" alt="BLIK">
-            <h2 style="margin-top: 20px;">Płatność BLIK</h2>
-            <p>Suma do pobrania: <strong id="blik-total">0</strong> zł</p>
-            <input type="text" id="blik-code" placeholder="000 000" maxlength="6" style="text-align: center; font-size: 2rem; width: 200px; margin: 20px auto; display: block;">
-            <button class="btn-buy" onclick="processOrder()">POTWIERDŹ PŁATNOŚĆ</button>
-        </div>
-    </div>
-
-    <div id="success" class="view">
-        <div class="auth-box" style="text-align: center; border-color: var(--green);">
-            <i class="fas fa-check-circle" style="font-size: 5rem; color: var(--green); margin-bottom: 20px;"></i>
-            <h1 style="color: var(--green);">Zamówienie złożone!</h1>
-            <p>Twoje zamówienie zostało przekazane do realizacji.</p>
-            <p><strong>Zostanie wysłane w ciągu 24 godzin.</strong></p>
-            <button class="btn-buy" style="margin-top: 30px;" onclick="location.reload()">Wróć do sklepu</button>
+    <div id="contact" class="view">
+        <div class="product-profile" style="text-align: center;">
+            <h2>Dokończ zamówienie</h2>
+            <p>Skopiuj listę z koszyka lub zrób screena i wyślij go tutaj:</p>
+            <h1 style="color:var(--accent)">TwojaKsywka#0000</h1>
+            <p>Metoda płatności: <strong>BLIK</strong></p>
         </div>
     </div>
 
@@ -169,9 +129,6 @@
 
 <script>
     let basket = [];
-    let user = { loggedIn: false, login: '', phone: '' };
-    const shippingCost = 15;
-
     const catalog = {
         'u-fmcb': { title: "Usługa: FMCB Card", icon: "fa-microchip", del: "1-2 dni", desc: "Instalacja Free McBoot na Twojej karcie pamięci.", variants: {"Instalacja": 20}, stock: "Wysoka" },
         'u-fdvdb': { title: "Usługa: FDVDB", icon: "fa-compact-disc", del: "1-2 dni", desc: "Modyfikacja umożliwiająca odpalanie kopii z płyt DVD.", variants: {"Instalacja": 20}, stock: "Dostępna" },
@@ -188,27 +145,6 @@
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         window.scrollTo(0,0);
-    }
-
-    function handleCartClick() {
-        if (!user.loggedIn) showView('auth');
-        else showView('cart');
-    }
-
-    function sendSmsCode() {
-        const login = document.getElementById('user-login').value;
-        const phone = document.getElementById('user-phone').value;
-        if (!login || !phone) return alert("Podaj login i numer telefonu!");
-        user.login = login;
-        user.phone = phone;
-        showView('sms-verify');
-    }
-
-    function completeAuth() {
-        const code = document.getElementById('sms-input').value;
-        if (!code) return alert("Wpisz kod SMS!");
-        user.loggedIn = true;
-        showView('cart');
     }
 
     function openProduct(id) {
@@ -246,51 +182,19 @@
         const variantName = s.options[s.selectedIndex].text;
         basket.push({ item: title + " (" + variantName + ")", price: parseInt(s.value) });
         sync();
-        alert("Dodano do koszyka!");
+        alert("Produkt trafił do koszyka!");
     }
 
     function sync() {
-        const subtotal = basket.reduce((a, b) => a + b.price, 0);
-        const total = subtotal > 0 ? subtotal + shippingCost : 0;
-        
-        document.getElementById('cart-count').innerText = subtotal;
-        document.getElementById('total-val').innerText = total;
-        document.getElementById('blik-total').innerText = total;
-
-        document.getElementById('cart-content').innerHTML = basket.map((v) => `
+        const sum = basket.reduce((a, b) => a + b.price, 0);
+        document.getElementById('cart-count').innerText = sum;
+        document.getElementById('total-val').innerText = sum;
+        document.getElementById('cart-content').innerHTML = basket.map((v, index) => `
             <div class="cart-item">
                 <span>${v.item}</span>
                 <strong>${v.price} zł</strong>
             </div>
         `).join('') || '<p>Twój koszyk jest pusty.</p>';
-    }
-
-    function goToBlik() {
-        if (basket.length === 0) return alert("Koszyk jest pusty!");
-        if (!document.getElementById('ship-address').value) return alert("Podaj kod paczkomatu!");
-        showView('blik-view');
-    }
-
-    function processOrder() {
-        const code = document.getElementById('blik-code').value;
-        if (code.length < 6) return alert("Podaj poprawny kod BLIK!");
-
-        // SYMULACJA WYSYŁKI E-MAIL (LOGIKA DLA CIEBIE)
-        const emailBody = {
-            odbiorca: "TWOJ_EMAIL_TUTAJ",
-            klient: user.login,
-            telefon: user.phone,
-            adres: document.getElementById('ship-address').value,
-            produkty: basket,
-            suma: document.getElementById('total-val').innerText
-        };
-        
-        console.log("Wysyłanie danych o zamówieniu:", emailBody);
-        
-        // Finalizacja
-        basket = [];
-        sync();
-        showView('success');
     }
 </script>
 
