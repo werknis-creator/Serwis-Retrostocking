@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RetroStocking | Professional Retro Service</title>
+    <title>RetroStocking | Serwis & Sklep</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; }
@@ -11,134 +11,179 @@
         
         .nav-bar { background: #1e293b; padding: 15px; display: flex; justify-content: center; gap: 20px; border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 100; }
         .nav-link { color: var(--text); cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; }
-        .nav-link:hover { color: var(--accent); }
+        .cart-status { position: absolute; right: 20px; color: var(--accent); font-weight: bold; cursor: pointer; }
 
         .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
-        
-        .status-bar { text-align: center; margin-bottom: 20px; font-size: 0.8rem; color: #10b981; }
-        .dot { height: 10px; width: 10px; background-color: #10b981; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1.5s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
         .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.3s ease-in; }
+        .view.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .card { background: var(--card); border-radius: 15px; padding: 30px; border: 1px solid #334155; text-align: center; }
-        .price-btn { background: var(--accent); color: var(--bg); border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.1rem; }
+        .card { background: var(--card); border-radius: 15px; padding: 30px; border: 1px solid #334155; text-align: center; margin-bottom: 20px; }
+        .price-btn { background: var(--accent); color: var(--bg); border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
         
-        .list-item { background: #1e293b; padding: 20px; border-radius: 10px; margin: 10px 0; border: 1px solid #334155; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
-        .list-item:hover { border-color: var(--accent); background: #2d3e50; transform: translateX(5px); }
-
-        .back-link { color: var(--accent); cursor: pointer; display: inline-block; margin-bottom: 20px; text-decoration: none; font-size: 0.9rem; }
+        .list-item { background: #1e293b; padding: 15px; border-radius: 10px; margin: 10px 0; border: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
+        .buy-btn { background: #10b981; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
         
-        footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.8rem; border-top: 1px solid #334155; margin-top: 50px; }
+        select { background: #0f172a; color: white; border: 1px solid var(--accent); padding: 5px; border-radius: 5px; margin-right: 10px; }
+        
+        .cart-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #334155; }
+        .back-link { color: var(--accent); cursor: pointer; display: block; margin-bottom: 20px; }
+        
+        footer { text-align: center; padding: 40px; color: #64748b; border-top: 1px solid #334155; }
     </style>
 </head>
 <body>
 
 <div class="nav-bar">
-    <div class="nav-link" onclick="showView('home')">Start</div>
-    <div class="nav-link" onclick="showView('hardware')">Mój Sprzęt</div>
-    <div class="nav-link" onclick="changeView('contact')">Kontakt</div>
+    <div class="nav-link" onclick="showView('home')">Usługi</div>
+    <div class="nav-link" onclick="showView('shop')">Sklep</div>
+    <div class="nav-link" onclick="showView('contact')">Kontakt</div>
+    <div class="cart-status" onclick="showView('cart')"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span> zł</div>
 </div>
 
 <div class="container">
-    <div class="status-bar"><span class="dot"></span> SYSTEM ONLINE - PRZYJMUJĘ ZLECENIA</div>
-
+    
     <div id="home" class="view active">
         <div class="card">
-            <i class="fas fa-microchip" style="font-size: 3rem; color: var(--accent); margin-bottom: 20px;"></i>
-            <h2>Softmod, Nośniki CD, DVD i SD</h2>
-            <p>Profesjonalna modyfikacja oprogramowania i przygotowanie nośników dla Twojej konsoli.</p>
-            <p style="font-size: 1.5rem; font-weight: bold; color: var(--accent);">20 - 400 PLN</p>
-            <button class="price-btn" onclick="showView('choose-console')">WYBIERZ KONSOLĘ I ZAMÓW</button>
+            <h2>Modyfikacje i Serwis</h2>
+            <p>Softmod, Nośniki CD, DVD i SD</p>
+            <button class="price-btn" onclick="showView('menu-ps2')">Przejdź do konfiguracji PS2</button>
+            <button class="price-btn" style="background: #334155; color: white;" onclick="alert('Pozostałe konsole w trakcie aktualizacji cennika...')">Inne konsole</button>
         </div>
     </div>
 
-    <div id="choose-console" class="view">
-        <span class="back-link" onclick="showView('home')">← Wróć do startu</span>
-        <h2 style="text-align: center;">Dla jakiego sprzętu robimy serwis?</h2>
-        <div class="list-item" onclick="showView('menu-ps2')"><i class="fab fa-playstation"></i> PlayStation 2</div>
-        <div class="list-item" onclick="showView('menu-xbox')"><i class="fab fa-xbox"></i> Xbox Classic</div>
-        <div class="list-item" onclick="showView('menu-wii')"><i class="fas fa-gamepad"></i> Nintendo Wii</div>
-        <div class="list-item" onclick="showView('menu-ds')"><i class="fas fa-tablet-alt"></i> Nintendo DS</div>
-        <div class="list-item" onclick="showView('menu-dreamcast')"><i class="fas fa-compact-disc"></i> Sega Dreamcast</div>
+    <div id="shop" class="view">
+        <h2>Zamów artykuły elektroniczne</h2>
+        
+        <div class="list-item">
+            <div><strong>FMCB Card (3-6 dni)</strong></div>
+            <div>
+                <select id="fmcb-fast">
+                    <option value="50">8MB - 50zł</option>
+                    <option value="55">16MB - 55zł</option>
+                    <option value="65">32MB - 65zł</option>
+                    <option value="80">64MB - 80zł</option>
+                    <option value="100">128MB - 100zł</option>
+                </select>
+                <button class="buy-btn" onclick="addToCart('FMCB Card (Szybka)', 'fmcb-fast')">Dodaj</button>
+            </div>
+        </div>
+
+        <div class="list-item">
+            <div><strong>FMCB Card (9-13 dni)</strong></div>
+            <div>
+                <select id="fmcb-slow">
+                    <option value="30">8MB - 30zł</option>
+                    <option value="40">16MB - 40zł</option>
+                    <option value="50">32MB - 50zł</option>
+                    <option value="60">64MB - 60zł</option>
+                    <option value="70">128MB - 70zł</option>
+                </select>
+                <button class="buy-btn" onclick="addToCart('FMCB Card (Ekonomiczna)', 'fmcb-slow')">Dodaj</button>
+            </div>
+        </div>
+
+        <div class="list-item">
+            <div><strong>Custom PS2 Pendrive (9-14 dni)</strong></div>
+            <div>
+                <select id="pendrive-choice">
+                    <option value="15">32GB - 15zł</option>
+                    <option value="30">64GB - 30zł</option>
+                    <option value="50">128GB - 50zł</option>
+                    <option value="75">256GB - 75zł</option>
+                    <option value="100">512GB - 100zł</option>
+                    <option value="150">1TB - 150zł</option>
+                    <option value="250">2TB - 250zł</option>
+                </select>
+                <button class="buy-btn" onclick="addToCart('Pendrive z grami', 'pendrive-choice')">Dodaj</button>
+            </div>
+        </div>
+
+        <div class="list-item">
+            <span>FDVDB Disc DVD (2-4 dni) - <strong>20zł</strong></span>
+            <button class="buy-btn" onclick="addSimpleToCart('FDVDB Disc', 20)">Dodaj</button>
+        </div>
+
+        <div class="list-item">
+            <span>Pudełko CD/DVD/BR (2-4 dni) - <strong>3zł</strong></span>
+            <button class="buy-btn" onclick="addSimpleToCart('Pudełko Box', 3)">Dodaj</button>
+        </div>
     </div>
 
     <div id="menu-ps2" class="view">
-        <span class="back-link" onclick="showView('choose-console')">← Wróć do wyboru konsoli</span>
-        <h2>Opcje PlayStation 2:</h2>
-        <div class="list-item" onclick="selectService('PS2', 'FMCB Card')">FMCB Card</div>
-        <div class="list-item" onclick="selectService('PS2', 'FDVDB')">FDVDB</div>
-        <div class="list-item" onclick="selectService('PS2', 'DVD Backups')">DVD Backups</div>
-        <div class="list-item" onclick="selectService('PS2', 'Pendrive Backups')">Pendrive Backups</div>
+        <span class="back-link" onclick="showView('home')">← Wróć</span>
+        <h2>Serwis PlayStation 2:</h2>
+        <div class="list-item"><span>FMCB Card (Usługa)</span> <span>+20zł <button class="buy-btn" onclick="addSimpleToCart('Usługa FMCB', 20)">Dodaj</button></span></div>
+        <div class="list-item"><span>FDVDB (Usługa)</span> <span>+20zł <button class="buy-btn" onclick="addSimpleToCart('Usługa FDVDB', 20)">Dodaj</button></span></div>
+        <div class="list-item"><span>DVD Backups (za szt.)</span> <span>+15zł <button class="buy-btn" onclick="addSimpleToCart('DVD Backup', 15)">Dodaj</button></span></div>
+        <div class="list-item"><span>Pendrive Backups</span> <span>+2zł <button class="buy-btn" onclick="addSimpleToCart('Pendrive Backup', 2)">Dodaj</button></span></div>
     </div>
 
-    <div id="menu-xbox" class="view">
-        <span class="back-link" onclick="showView('choose-console')">← Wróć do wyboru konsoli</span>
-        <h2>Opcje Xbox Classic:</h2>
-        <div class="list-item" onclick="selectService('Xbox', 'Softmod')">Softmod</div>
-        <div class="list-item" onclick="selectService('Xbox', 'Softmod + C. Firmware')">Softmod + C. Firmware</div>
-        <div class="list-item" onclick="selectService('Xbox', 'DVD Backups')">DVD Backups</div>
-        <div class="list-item" onclick="selectService('Xbox', 'HDD Backups')">HDD Backups</div>
-    </div>
-
-    <div id="menu-wii" class="view">
-        <span class="back-link" onclick="showView('choose-console')">← Wróć do wyboru konsoli</span>
-        <h2>Opcje Nintendo Wii:</h2>
-        <div class="list-item" onclick="selectService('Wii', 'Softmod')">Softmod</div>
-        <div class="list-item" onclick="selectService('Wii', 'Console Homebrew Emulators')">Console Homebrew Emulators</div>
-        <div class="list-item" onclick="selectService('Wii', 'Homebrews')">Homebrews</div>
-        <div class="list-item" onclick="selectService('Wii', 'SD/Pendrive Backups')">SD/Pendrive Backups</div>
-    </div>
-
-    <div id="menu-ds" class="view">
-        <span class="back-link" onclick="showView('choose-console')">← Wróć do wyboru konsoli</span>
-        <h2>Opcje Nintendo DS:</h2>
-        <div class="list-item" onclick="selectService('DS', 'R4 Configuration')">Konfiguracja Karty R4</div>
-        <div class="list-item" onclick="selectService('DS', 'SD Pack')">Paczka plików na kartę SD</div>
-    </div>
-
-    <div id="menu-dreamcast" class="view">
-        <span class="back-link" onclick="showView('choose-console')">← Wróć do wyboru konsoli</span>
-        <h2>Opcje Sega Dreamcast:</h2>
-        <div class="list-item" onclick="selectService('Dreamcast', 'Dreamshell CD + SD Card Adapter + SD card')">Dreamshell CD + Adapter + SD</div>
-        <div class="list-item" onclick="selectService('Dreamcast', 'CD Backups')">CD Backups</div>
-        <div class="list-item" onclick="selectService('Dreamcast', 'Dreamshell SD Backups')">Dreamshell SD Backups</div>
-    </div>
-
-    <div id="hardware" class="view">
-        <h2>Mój Warsztat Testowy</h2>
-        <div class="list-item"><i class="fas fa-check"></i> Sega Dreamcast</div>
-        <div class="list-item"><i class="fas fa-check"></i> Xbox Classic</div>
-        <div class="list-item"><i class="fas fa-check"></i> PlayStation 2</div>
-        <div class="list-item"><i class="fas fa-check"></i> Nintendo Wii</div>
-        <div class="list-item"><i class="fas fa-check"></i> Nintendo DS</div>
+    <div id="cart" class="view">
+        <h2>Twój Koszyk</h2>
+        <div id="cart-list"></div>
+        <hr style="border: 0; border-top: 1px solid #334155; margin: 20px 0;">
+        <div style="font-size: 1.5rem; text-align: right;">Suma: <span id="cart-total">0</span> zł</div>
+        <button class="price-btn" onclick="checkout()">ZŁÓŻ ZAMÓWIENIE (PRZEZ KONTAKT)</button>
+        <button class="back-link" onclick="clearCart()" style="background:none; border:none; margin-top: 10px;">Wyczyść koszyk</button>
     </div>
 
     <div id="contact" class="view">
         <div class="card">
-            <h2>Kontakt i Zamówienia</h2>
-            <p>Każde zlecenie wyceniam indywidualnie po kontakcie.</p>
+            <h2>Kontakt</h2>
             <p>Discord: <strong>TwojaKsywka#0000</strong></p>
             <p>Płatność: <strong>BLIK</strong></p>
+            <p>Wyślij mi screena swojego koszyka na Discordzie!</p>
         </div>
     </div>
 
-    <footer>
-        &copy; 2026 RetroStocking | Strona dla pasjonatów od pasjonata
-    </footer>
+    <footer>&copy; 2026 RetroStocking | Sklep & Serwis</footer>
 </div>
 
 <script>
-    function showView(viewId) {
+    let cart = [];
+    let total = 0;
+
+    function showView(id) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.getElementById(viewId).classList.add('active');
-        window.scrollTo(0,0);
+        document.getElementById(id).classList.add('active');
     }
 
-    function selectService(console, service) {
-        alert("Wybrano: " + console + " -> " + service + ". Skontaktuj się ze mną przez Discord, aby otrzymać wycenę!");
+    function addToCart(name, selectId) {
+        let sel = document.getElementById(selectId);
+        let price = parseInt(sel.value);
+        let label = sel.options[sel.selectedIndex].text;
+        cart.push({name: name + " (" + label + ")", price: price});
+        updateCart();
+    }
+
+    function addSimpleToCart(name, price) {
+        cart.push({name: name, price: price});
+        updateCart();
+    }
+
+    function updateCart() {
+        total = cart.reduce((sum, item) => sum + item.price, 0);
+        document.getElementById('cart-count').innerText = total;
+        document.getElementById('cart-total').innerText = total;
+        
+        let list = document.getElementById('cart-list');
+        list.innerHTML = cart.map(item => `
+            <div class="cart-item">
+                <span>${item.name}</span>
+                <span>${item.price} zł</span>
+            </div>
+        `).join('');
+    }
+
+    function clearCart() {
+        cart = [];
+        updateCart();
+    }
+
+    function checkout() {
+        if(cart.length === 0) return alert("Koszyk jest pusty!");
+        alert("Zrób teraz zdjęcie (screen) koszyka i wyślij mi go na Discordzie! Suma do zapłaty: " + total + " zł");
         showView('contact');
     }
 </script>
