@@ -3,45 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RetroStocking | Serwis i Software</title>
+    <title>RetroStocking | Professional Retro Service</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
         
-        .nav-bar { background: #1e293b; padding: 15px; display: flex; justify-content: center; gap: 20px; border-bottom: 2px solid var(--accent); }
-        .nav-link { color: var(--text); cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.9rem; }
+        .nav-bar { background: #1e293b; padding: 15px; display: flex; justify-content: center; gap: 20px; border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 100; }
+        .nav-link { color: var(--text); cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; }
         .nav-link:hover { color: var(--accent); }
 
         .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
         
-        /* STATUS LIVE */
         .status-bar { text-align: center; margin-bottom: 20px; font-size: 0.8rem; color: #10b981; }
         .dot { height: 10px; width: 10px; background-color: #10b981; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* WIDOKI */
         .view { display: none; }
-        .view.active { display: block; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        .view.active { display: block; animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* KARTY */
-        .card { background: var(--card); border-radius: 15px; padding: 30px; border: 1px solid #334155; margin-bottom: 20px; text-align: center; }
-        .price-btn { background: var(--accent); color: var(--bg); border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem; width: 100%; transition: 0.3s; }
-        .price-btn:hover { background: #7dd3fc; transform: scale(1.02); }
-
-        /* LISTA KONSOL */
-        .console-item { background: #0f172a; padding: 20px; border-radius: 10px; margin: 10px 0; border: 1px solid #334155; cursor: pointer; display: flex; align-items: center; gap: 15px; font-size: 1.2rem; }
-        .console-item:hover { border-color: var(--accent); background: #1e293b; }
+        .card { background: var(--card); border-radius: 15px; padding: 30px; border: 1px solid #334155; text-align: center; }
+        .price-btn { background: var(--accent); color: var(--bg); border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.1rem; }
         
-        footer { text-align: center; padding: 40px; color: #64748b; border-top: 1px solid #334155; margin-top: 50px; }
+        .list-item { background: #1e293b; padding: 20px; border-radius: 10px; margin: 10px 0; border: 1px solid #334155; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
+        .list-item:hover { border-color: var(--accent); background: #2d3e50; transform: translateX(5px); }
+
+        .back-link { color: var(--accent); cursor: pointer; display: inline-block; margin-bottom: 20px; text-decoration: none; font-size: 0.9rem; }
+        
+        footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.8rem; border-top: 1px solid #334155; margin-top: 50px; }
     </style>
 </head>
 <body>
 
 <div class="nav-bar">
-    <div class="nav-link" onclick="changeView('home')">Start</div>
-    <div class="nav-link" onclick="changeView('hardware')">Moje Konsole</div>
+    <div class="nav-link" onclick="showView('home')">Start</div>
+    <div class="nav-link" onclick="showView('hardware')">Mój Sprzęt</div>
     <div class="nav-link" onclick="changeView('contact')">Kontakt</div>
 </div>
 
@@ -51,71 +48,98 @@
     <div id="home" class="view active">
         <div class="card">
             <i class="fas fa-microchip" style="font-size: 3rem; color: var(--accent); margin-bottom: 20px;"></i>
-            <h2>Konfiguracja Kart SD / R4 / HDD</h2>
-            <p>Optymalizacja oprogramowania, emulatory, autorskie paczki plików. Szybko i profesjonalnie.</p>
-            <p style="font-size: 1.5rem; font-weight: bold; color: var(--accent);">35 PLN</p>
-            <button class="price-btn" onclick="changeView('order')">WYBIERZ KONSOLĘ I ZAMÓW</button>
-        </div>
-        
-        <div class="card" style="opacity: 0.8;">
-            <h3>Inne Usługi & Programowanie</h3>
-            <p>Skrypty Python, czyszczenie baz danych, pomoc zdalna.</p>
-            <button class="price-btn" style="background: transparent; border: 1px solid var(--accent); color: var(--accent);" onclick="changeView('contact')">ZAPYTAJ O CENĘ</button>
+            <h2>Softmod, Nośniki CD, DVD i SD</h2>
+            <p>Profesjonalna modyfikacja oprogramowania i przygotowanie nośników dla Twojej konsoli.</p>
+            <p style="font-size: 1.5rem; font-weight: bold; color: var(--accent);">20 - 400 PLN</p>
+            <button class="price-btn" onclick="showView('choose-console')">WYBIERZ KONSOLĘ I ZAMÓW</button>
         </div>
     </div>
 
-    <div id="order" class="view">
+    <div id="choose-console" class="view">
+        <span class="back-link" onclick="showView('home')">← Wróć do startu</span>
         <h2 style="text-align: center;">Dla jakiego sprzętu robimy serwis?</h2>
-        <div class="console-item" onclick="finalStep('PS2')"><i class="fab fa-playstation"></i> PlayStation 2</div>
-        <div class="console-item" onclick="finalStep('Xbox Original')"><i class="fab fa-xbox"></i> Xbox Classic</div>
-        <div class="console-item" onclick="finalStep('Nintendo Wii')"><i class="fas fa-gamepad"></i> Nintendo Wii</div>
-        <div class="console-item" onclick="finalStep('Nintendo DS')"><i class="fas fa-tablet-alt"></i> Nintendo DS</div>
-        <div class="console-item" onclick="finalStep('Sega Dreamcast')"><i class="fas fa-compact-disc"></i> Sega Dreamcast</div>
-        <button onclick="changeView('home')" style="background: none; border: none; color: var(--accent); cursor: pointer; margin-top: 20px;">← Wróć do strony głównej</button>
+        <div class="list-item" onclick="showView('menu-ps2')"><i class="fab fa-playstation"></i> PlayStation 2</div>
+        <div class="list-item" onclick="showView('menu-xbox')"><i class="fab fa-xbox"></i> Xbox Classic</div>
+        <div class="list-item" onclick="showView('menu-wii')"><i class="fas fa-gamepad"></i> Nintendo Wii</div>
+        <div class="list-item" onclick="showView('menu-ds')"><i class="fas fa-tablet-alt"></i> Nintendo DS</div>
+        <div class="list-item" onclick="showView('menu-dreamcast')"><i class="fas fa-compact-disc"></i> Sega Dreamcast</div>
+    </div>
+
+    <div id="menu-ps2" class="view">
+        <span class="back-link" onclick="showView('choose-console')">← Wróć do wyboru konsoli</span>
+        <h2>Opcje PlayStation 2:</h2>
+        <div class="list-item" onclick="selectService('PS2', 'FMCB Card')">FMCB Card</div>
+        <div class="list-item" onclick="selectService('PS2', 'FDVDB')">FDVDB</div>
+        <div class="list-item" onclick="selectService('PS2', 'DVD Backups')">DVD Backups</div>
+        <div class="list-item" onclick="selectService('PS2', 'Pendrive Backups')">Pendrive Backups</div>
+    </div>
+
+    <div id="menu-xbox" class="view">
+        <span class="back-link" onclick="showView('choose-console')">← Wróć do wyboru konsoli</span>
+        <h2>Opcje Xbox Classic:</h2>
+        <div class="list-item" onclick="selectService('Xbox', 'Softmod')">Softmod</div>
+        <div class="list-item" onclick="selectService('Xbox', 'Softmod + C. Firmware')">Softmod + C. Firmware</div>
+        <div class="list-item" onclick="selectService('Xbox', 'DVD Backups')">DVD Backups</div>
+        <div class="list-item" onclick="selectService('Xbox', 'HDD Backups')">HDD Backups</div>
+    </div>
+
+    <div id="menu-wii" class="view">
+        <span class="back-link" onclick="showView('choose-console')">← Wróć do wyboru konsoli</span>
+        <h2>Opcje Nintendo Wii:</h2>
+        <div class="list-item" onclick="selectService('Wii', 'Softmod')">Softmod</div>
+        <div class="list-item" onclick="selectService('Wii', 'Console Homebrew Emulators')">Console Homebrew Emulators</div>
+        <div class="list-item" onclick="selectService('Wii', 'Homebrews')">Homebrews</div>
+        <div class="list-item" onclick="selectService('Wii', 'SD/Pendrive Backups')">SD/Pendrive Backups</div>
+    </div>
+
+    <div id="menu-ds" class="view">
+        <span class="back-link" onclick="showView('choose-console')">← Wróć do wyboru konsoli</span>
+        <h2>Opcje Nintendo DS:</h2>
+        <div class="list-item" onclick="selectService('DS', 'R4 Configuration')">Konfiguracja Karty R4</div>
+        <div class="list-item" onclick="selectService('DS', 'SD Pack')">Paczka plików na kartę SD</div>
+    </div>
+
+    <div id="menu-dreamcast" class="view">
+        <span class="back-link" onclick="showView('choose-console')">← Wróć do wyboru konsoli</span>
+        <h2>Opcje Sega Dreamcast:</h2>
+        <div class="list-item" onclick="selectService('Dreamcast', 'Dreamshell CD + SD Card Adapter + SD card')">Dreamshell CD + Adapter + SD</div>
+        <div class="list-item" onclick="selectService('Dreamcast', 'CD Backups')">CD Backups</div>
+        <div class="list-item" onclick="selectService('Dreamcast', 'Dreamshell SD Backups')">Dreamshell SD Backups</div>
     </div>
 
     <div id="hardware" class="view">
-        <h2>Mój warsztat</h2>
-        <p>Pracuję na realnym sprzęcie, nie tylko na emulatorach. Posiadam i serwisuję:</p>
-        <ul style="list-style: none; padding: 0;">
-            <li class="console-item"><i class="fas fa-check-circle" style="color: #10b981"></i> Sega Dreamcast (Testy płyt)</li>
-            <li class="console-item"><i class="fas fa-check-circle" style="color: #10b981"></i> Xbox Classic (HDD Mods)</li>
-            <li class="console-item"><i class="fas fa-check-circle" style="color: #10b981"></i> PlayStation 2 (FreeMcBoot)</li>
-            <li class="console-item"><i class="fas fa-check-circle" style="color: #10b981"></i> Nintendo Wii (Homebrew)</li>
-            <li class="console-item"><i class="fas fa-check-circle" style="color: #10b981"></i> Nintendo DS (R4 Config)</li>
-        </ul>
+        <h2>Mój Warsztat Testowy</h2>
+        <div class="list-item"><i class="fas fa-check"></i> Sega Dreamcast</div>
+        <div class="list-item"><i class="fas fa-check"></i> Xbox Classic</div>
+        <div class="list-item"><i class="fas fa-check"></i> PlayStation 2</div>
+        <div class="list-item"><i class="fas fa-check"></i> Nintendo Wii</div>
+        <div class="list-item"><i class="fas fa-check"></i> Nintendo DS</div>
     </div>
 
     <div id="contact" class="view">
         <div class="card">
-            <h2>Jak zamówić?</h2>
-            <p>1. Wybierz usługę na stronie głównej.</p>
-            <p>2. Napisz do mnie na Discordzie lub e-mail.</p>
-            <p>3. Płatność realizujemy przez <strong>BLIK</strong>.</p>
-            <hr style="border: 0; border-top: 1px solid #334155; margin: 20px 0;">
+            <h2>Kontakt i Zamówienia</h2>
+            <p>Każde zlecenie wyceniam indywidualnie po kontakcie.</p>
             <p>Discord: <strong>TwojaKsywka#0000</strong></p>
-            <p>Email: <strong>kontakt@twojastrona.pl</strong></p>
+            <p>Płatność: <strong>BLIK</strong></p>
         </div>
     </div>
 
     <footer>
-        &copy; 2026 RetroStocking | Strona stworzona do obsługi fanów Retro
+        &copy; 2026 RetroStocking | Strona dla pasjonatów od pasjonata
     </footer>
 </div>
 
 <script>
-    function changeView(viewId) {
-        // Ukrywamy wszystkie widoki
+    function showView(viewId) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        // Pokazujemy ten konkretny
         document.getElementById(viewId).classList.add('active');
-        // Zawsze przewijamy na górę
-        window.scrollTo(0, 0);
+        window.scrollTo(0,0);
     }
 
-    function finalStep(console) {
-        alert("Wybrano konfigurację dla: " + console + ". Teraz przejdź do zakładki KONTAKT, aby podać szczegóły wysyłki/płatności!");
-        changeView('contact');
+    function selectService(console, service) {
+        alert("Wybrano: " + console + " -> " + service + ". Skontaktuj się ze mną przez Discord, aby otrzymać wycenę!");
+        showView('contact');
     }
 </script>
 
