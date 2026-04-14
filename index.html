@@ -11,7 +11,8 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
         
         .nav-bar { background: #1e293b; padding: 15px; display: flex; justify-content: center; gap: 20px; border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
-        .nav-link { color: var(--text); cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; text-decoration: none; }
+        .nav-link { color: var(--text); cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; text-decoration: none; transition: 0.2s; }
+        .nav-link:hover, .nav-link.active-cat { color: var(--accent); }
         .cart-status { position: absolute; right: 20px; color: var(--accent); font-weight: bold; cursor: pointer; }
 
         .container { max-width: 900px; margin: 0 auto; padding: 20px; }
@@ -19,7 +20,7 @@
         .view.active { display: block; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .grid-header { border-bottom: 1px solid #334155; margin-bottom: 20px; padding-bottom: 10px; }
+        .grid-header { border-bottom: 1px solid #334155; margin-bottom: 20px; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .product-list-card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #334155; margin-bottom: 15px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: 0.2s; }
         .product-list-card:hover { border-color: var(--accent); transform: scale(1.01); }
         .img-preview { width: 60px; height: 60px; background: #0f172a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent); }
@@ -33,7 +34,7 @@
 
         .product-profile { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid #334155; }
         .p-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; }
-        @media (max-width: 600px) { .p-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .p-grid { grid-template-columns: 1fr; } .cart-status { position: relative; right: 0; order: 10; margin-top: 10px; } }
         
         .main-img { aspect-ratio: 1; background: #0f172a; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--accent); border: 1px solid #334155; }
         .price-tag { font-size: 1.8rem; font-weight: bold; color: var(--accent); margin: 10px 0; }
@@ -52,7 +53,8 @@
 <body>
 
 <div class="nav-bar">
-    <div class="nav-link" onclick="showView('shop')">Sklep</div>
+    <div class="nav-link active-cat" id="nav-ps2" onclick="switchCategory('PS2')">PS2</div>
+    <div class="nav-link" id="nav-dc" onclick="switchCategory('DC')">Dreamcast</div>
     <div class="nav-link" onclick="showView('contact')">Kontakt</div>
     <div id="user-display" class="nav-link" style="color:var(--green)">Gość</div>
     <div class="cart-status" onclick="showView('cart')"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span> zł</div>
@@ -84,27 +86,8 @@
     </div>
 
     <div id="shop" class="view active">
-        <h2 class="grid-header">Dostępne produkty</h2>
-        <div class="product-list-card" onclick="openProduct('fmcb-fast')">
-            <div class="img-preview"><i class="fas fa-bolt"></i></div>
-            <div><h3>FMCB Card (Szybka)</h3><p>Wysyłka krajowa. Dostawa: 6 dni.</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('fmcb-slow')">
-            <div class="img-preview"><i class="fas fa-shuttle-van"></i></div>
-            <div><h3>FMCB Card (Ekono)</h3><p>Oszczędna opcja. Dostawa: 13 dni.</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('pen-games')">
-            <div class="img-preview"><i class="fas fa-hdd"></i></div>
-            <div><h3>Custom PS2 Pendrive</h3><p>Zestaw gier USB. Dostawa: 14 dni.</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('fdvdb-disc')">
-            <div class="img-preview"><i class="fas fa-disc"></i></div>
-            <div><h3>FDVDB Disc DVD</h3><p>Gotowa płyta. Dostawa: 4 dni.</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('box')">
-            <div class="img-preview"><i class="fas fa-box"></i></div>
-            <div><h3>Pudełko CD/DVD/BR</h3><p>Etui ochronne. Dostawa: 4 dni.</p></div>
-        </div>
+        <h2 class="grid-header" id="shop-title">Produkty PS2</h2>
+        <div id="product-list"></div>
     </div>
 
     <div id="product-page" class="view">
@@ -164,20 +147,25 @@
 </div>
 
 <script>
-    // Konfiguracja Twojego maila
     const MOJ_EMAIL = "twoj-email@gmail.com"; 
-
     let basket = [];
     let currentUser = JSON.parse(localStorage.getItem('user')) || null;
+    let currentCategory = 'PS2';
     const shippingCost = 15;
 
-    // Słownik produktów z czasem dostawy zapisanym jako liczba (dni)
     const catalog = {
-        'fmcb-fast': { title: "FMCB Card (Szybka)", icon: "fa-bolt", delDays: 6, desc: "Szybka karta z Softmodem.", variants: {"8MB": 50, "64MB": 80}, stock: "Na stanie" },
-        'fmcb-slow': { title: "FMCB Card (Ekono)", icon: "fa-shuttle-van", delDays: 13, desc: "Ekonomiczna karta FMCB.", variants: {"8MB": 30, "64MB": 60}, stock: "Wysoka" },
-        'pen-games': { title: "Custom PS2 Pendrive", icon: "fa-hdd", delDays: 14, desc: "USB z grami wg listy.", variants: {"64GB": 30, "128GB": 50, "512GB": 100}, stock: "Dostępne" },
-        'fdvdb-disc': { title: "FDVDB Disc DVD", icon: "fa-disc", delDays: 4, desc: "Płyta instalacyjna FDVDB.", variants: {"Standard": 20}, stock: "Wysoka" },
-        'box': { title: "Pudełko CD/DVD/BR", icon: "fa-box", delDays: 4, desc: "Etui ochronne.", variants: {"1 sztuka": 3, "10 sztuk": 30}, stock: "Wysoka" }
+        // PS2
+        'fmcb-fast': { cat: 'PS2', title: "FMCB Card (Szybka)", icon: "fa-bolt", delDays: 6, desc: "Szybka karta z Softmodem.", variants: {"8MB": 50, "64MB": 80}, stock: "Na stanie" },
+        'fmcb-slow': { cat: 'PS2', title: "FMCB Card (Ekono)", icon: "fa-shuttle-van", delDays: 13, desc: "Ekonomiczna karta FMCB.", variants: {"8MB": 30, "64MB": 60}, stock: "Wysoka" },
+        'pen-games': { cat: 'PS2', title: "Custom PS2 Pendrive", icon: "fa-hdd", delDays: 14, desc: "USB z grami wg listy.", variants: {"64GB": 30, "128GB": 50, "512GB": 100}, stock: "Dostępne" },
+        'fdvdb-disc': { cat: 'PS2', title: "FDVDB Disc DVD", icon: "fa-disc", delDays: 4, desc: "Płyta instalacyjna FDVDB.", variants: {"Standard": 20}, stock: "Wysoka" },
+        'box': { cat: 'PS2', title: "Pudełko CD/DVD/BR", icon: "fa-box", delDays: 4, desc: "Etui ochronne.", variants: {"1 sztuka": 3, "10 sztuk": 30}, stock: "Wysoka" },
+        
+        // Dreamcast
+        'dc-ds-cd': { cat: 'DC', title: "DreamShell CD", icon: "fa-compact-disc", delDays: 4, variants: {"Płyta": 20}, stock: "Na stanie" },
+        'dc-ds-sd': { cat: 'DC', title: "DreamShell SD Card", icon: "fa-sd-card", delDays: 6, variants: {"8GB": 20, "16GB": 40, "32GB": 100, "64GB": 170}, stock: "Dostępne" },
+        'dc-full-set': { cat: 'DC', title: "DreamShell FULL SET", icon: "fa-box-open", delDays: 14, variants: {"Zestaw": 80}, stock: "Na zamówienie" },
+        'dc-backup': { cat: 'DC', title: "CD Game Backup", icon: "fa-copy", delDays: 4, variants: {"1 sztuka": 15}, stock: "Na stanie" }
     };
 
     if(currentUser) document.getElementById('user-display').innerText = currentUser.name;
@@ -188,6 +176,92 @@
         window.scrollTo(0,0);
     }
 
+    function switchCategory(cat) {
+        currentCategory = cat;
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-cat'));
+        document.getElementById(cat === 'PS2' ? 'nav-ps2' : 'nav-dc').classList.add('active-cat');
+        renderShop();
+        showView('shop');
+    }
+
+    function renderShop() {
+        const list = document.getElementById('product-list');
+        document.getElementById('shop-title').innerText = currentCategory === 'PS2' ? "Produkty PS2" : "Produkty Dreamcast";
+        list.innerHTML = '';
+        
+        for (let key in catalog) {
+            if (catalog[key].cat === currentCategory) {
+                const p = catalog[key];
+                list.innerHTML += `
+                    <div class="product-list-card" onclick="openProduct('${key}')">
+                        <div class="img-preview"><i class="fas ${p.icon}"></i></div>
+                        <div><h3>${p.title}</h3><p>Dostawa: ok. ${p.delDays} dni.</p></div>
+                    </div>
+                `;
+            }
+        }
+    }
+
+    function openProduct(id) {
+        const p = catalog[id];
+        let opts = '';
+        for (let name in p.variants) opts += `<option value="${p.variants[name]}">${name} - ${p.variants[name]}zł</option>`;
+
+        document.getElementById('product-render').innerHTML = `
+            <span class="back-btn" onclick="showView('shop')">← Wróć</span>
+            <div class="product-profile">
+                <div class="p-grid">
+                    <div class="main-img"><i class="fas ${p.icon}"></i></div>
+                    <div>
+                        <div class="badge badge-green">Dostępność: ${p.stock}</div>
+                        <h1>${p.title}</h1>
+                        <p style="color: #94a3b8">Czas dostawy: do <strong>${p.delDays} dni</strong></p>
+                        <div class="price-tag" id="price-display">${Object.values(p.variants)[0]} zł</div>
+                        <select id="sel-variant" onchange="document.getElementById('price-display').innerText=this.value+' zł'">${opts}</select>
+                        <button class="btn-buy" onclick="add('${id}')">DODAJ DO KOSZYKA</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        showView('product-page');
+    }
+
+    function add(id) {
+        const p = catalog[id];
+        const s = document.getElementById('sel-variant');
+        basket.push({ 
+            title: p.title, 
+            variant: s.options[s.selectedIndex].text, 
+            price: parseInt(s.value),
+            del: p.delDays 
+        });
+        sync();
+        alert("Dodano do koszyka!");
+    }
+
+    function sync() {
+        const itemsSum = basket.reduce((a, b) => a + b.price, 0);
+        const total = itemsSum + (basket.length > 0 ? shippingCost : 0);
+        
+        let maxDel = 0;
+        if(basket.length > 0) {
+            maxDel = Math.max(...basket.map(i => i.del));
+        }
+
+        document.getElementById('cart-count').innerText = total;
+        document.getElementById('total-val').innerText = total;
+        document.getElementById('blik-amount').innerText = total.toFixed(2) + " zł";
+        document.getElementById('est-delivery').innerHTML = basket.length > 0 ? `Czas dostawy całego zamówienia: <strong>${maxDel} dni</strong>` : "";
+        
+        document.getElementById('cart-content').innerHTML = basket.map(v => `
+            <div class="cart-item">
+                <span>${v.title} (${v.variant})</span>
+                <strong>${v.price} zł</strong>
+            </div>
+        `).join('') || '<p>Koszyk jest pusty.</p>';
+    }
+
+    // Pozostałe funkcje logiki (Auth, SMS, Payment)
     function handleAuth() {
         const name = document.getElementById('reg-name').value;
         const phone = document.getElementById('reg-phone').value;
@@ -211,91 +285,16 @@
         currentUser ? showView('shipping') : showView('auth');
     }
 
-    function openProduct(id) {
-        const p = catalog[id];
-        let opts = '';
-        for (let name in p.variants) opts += `<option value="${p.variants[name]}">${name} - ${p.variants[name]}zł</option>`;
-
-        document.getElementById('product-render').innerHTML = `
-            <span class="back-btn" onclick="showView('shop')">← Wróć</span>
-            <div class="product-profile">
-                <div class="p-grid">
-                    <div class="main-img"><i class="fas ${p.icon}"></i></div>
-                    <div>
-                        <div class="badge badge-green">Dostępność: ${p.stock}</div>
-                        <h1>${p.title}</h1>
-                        <p style="color: #94a3b8">Czas oczekiwania: do <strong>${p.delDays} dni</strong></p>
-                        <div class="price-tag" id="price-display">${Object.values(p.variants)[0]} zł</div>
-                        <select id="sel-variant" onchange="document.getElementById('price-display').innerText=this.value+' zł'">${opts}</select>
-                        <button class="btn-buy" onclick="add('${id}')">DODAJ DO KOSZYKA</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        showView('product-page');
-    }
-
-    function add(id) {
-        const p = catalog[id];
-        const s = document.getElementById('sel-variant');
-        basket.push({ 
-            title: p.title, 
-            variant: s.options[s.selectedIndex].text, 
-            price: parseInt(s.value),
-            del: p.delDays 
-        });
-        sync();
-        alert("Dodano!");
-    }
-
-    function sync() {
-        const itemsSum = basket.reduce((a, b) => a + b.price, 0);
-        const total = itemsSum + (basket.length > 0 ? shippingCost : 0);
-        
-        // Logika NAJDŁUŻSZEJ dostawy
-        let maxDel = 0;
-        if(basket.length > 0) {
-            maxDel = Math.max(...basket.map(i => i.del));
-        }
-
-        document.getElementById('cart-count').innerText = total;
-        document.getElementById('total-val').innerText = total;
-        document.getElementById('blik-amount').innerText = total.toFixed(2) + " zł";
-        document.getElementById('est-delivery').innerHTML = basket.length > 0 ? `Czas dostawy całego zamówienia: <strong>${maxDel} dni</strong>` : "";
-        
-        document.getElementById('cart-content').innerHTML = basket.map(v => `
-            <div class="cart-item">
-                <span>${v.title} (${v.variant})</span>
-                <strong>${v.price} zł</strong>
-            </div>
-        `).join('') || '<p>Koszyk jest pusty.</p>';
-    }
-
     function processPayment() {
         const blik = document.getElementById('blik-code').value;
         if(blik.length !== 6) return alert("Zły kod BLIK!");
-
-        const orderInfo = basket.map(i => i.title + " " + i.variant).join(", ");
-        const finalPrice = document.getElementById('total-val').innerText;
-        const shipInfo = document.getElementById('ship-name').value + " | " + document.getElementById('ship-address').value;
-
-        // Raport dla Ciebie (do maila)
-        const emailBody = `
-            NOWE ZAMÓWIENIE:
-            Klient: ${currentUser.name}
-            Telefon: ${currentUser.phone}
-            Produkty: ${orderInfo}
-            Suma: ${finalPrice} zł
-            Adres: ${shipInfo}
-        `;
-
-        console.log("WYSYŁANIE DO " + MOJ_EMAIL, emailBody);
-        
-        // Tutaj można podpiąć EmailJS analogicznie jak wcześniej
         showView('order-success');
         basket = [];
         sync();
     }
+
+    // Inicjalizacja
+    renderShop();
 </script>
 
 </body>
