@@ -3,33 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RetroStocking | Serwis & Sklep</title>
+    <title>RetroStocking | Sklep & Serwis</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; --green: #10b981; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
         
-        .nav-bar { background: #1e293b; padding: 15px; display: flex; justify-content: center; gap: 20px; border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 100; }
+        .nav-bar { background: #1e293b; padding: 15px; display: flex; justify-content: center; gap: 20px; border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
         .nav-link { color: var(--text); cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; }
         .cart-status { position: absolute; right: 20px; color: var(--accent); font-weight: bold; cursor: pointer; }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
         .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.3s ease; }
+        .view.active { display: block; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .card { background: var(--card); border-radius: 15px; padding: 30px; border: 1px solid #334155; text-align: center; margin-bottom: 20px; }
-        .price-btn { background: var(--accent); color: var(--bg); border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        /* KARTY LISTY */
+        .product-list-card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #334155; margin-bottom: 15px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: 0.2s; }
+        .product-list-card:hover { border-color: var(--accent); transform: scale(1.01); }
+        .img-preview { width: 80px; height: 80px; background: #0f172a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent); }
+
+        /* PROFIL PRODUKTU */
+        .product-profile { background: var(--card); border-radius: 20px; padding: 30px; border: 1px solid #334155; }
+        .product-header { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+        .main-img { width: 100%; aspect-ratio: 1; background: #0f172a; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 5rem; color: var(--accent); }
+        .availability { color: var(--green); font-size: 0.9rem; margin-bottom: 10px; }
+        .price-big { font-size: 2rem; font-weight: bold; color: var(--accent); margin: 15px 0; }
         
-        .list-item { background: #1e293b; padding: 15px; border-radius: 10px; margin: 10px 0; border: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
-        .buy-btn { background: #10b981; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
+        select, .buy-btn { width: 100%; padding: 15px; border-radius: 8px; border: none; font-weight: bold; margin-top: 10px; }
+        select { background: #0f172a; color: white; border: 1px solid var(--accent); }
+        .buy-btn { background: var(--accent); color: var(--bg); cursor: pointer; }
         
-        select { background: #0f172a; color: white; border: 1px solid var(--accent); padding: 5px; border-radius: 5px; margin-right: 10px; }
+        .cart-item { display: flex; justify-content: space-between; padding: 15px; background: #1e293b; margin-bottom: 10px; border-radius: 8px; }
+        .back-btn { color: var(--accent); cursor: pointer; margin-bottom: 20px; display: block; }
         
-        .cart-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #334155; }
-        .back-link { color: var(--accent); cursor: pointer; display: block; margin-bottom: 20px; }
-        
-        footer { text-align: center; padding: 40px; color: #64748b; border-top: 1px solid #334155; }
+        footer { text-align: center; padding: 40px; color: #64748b; }
     </style>
 </head>
 <body>
@@ -42,149 +50,144 @@
 </div>
 
 <div class="container">
-    
+
     <div id="home" class="view active">
-        <div class="card">
-            <h2>Modyfikacje i Serwis</h2>
-            <p>Softmod, Nośniki CD, DVD i SD</p>
-            <button class="price-btn" onclick="showView('menu-ps2')">Przejdź do konfiguracji PS2</button>
-            <button class="price-btn" style="background: #334155; color: white;" onclick="alert('Pozostałe konsole w trakcie aktualizacji cennika...')">Inne konsole</button>
+        <h2>Modyfikacje PS2</h2>
+        <div class="product-list-card" onclick="openProduct('usluga-ps2')">
+            <div class="img-preview"><i class="fas fa-tools"></i></div>
+            <div>
+                <h3>Serwis & Softmod PS2</h3>
+                <p>FMCB, FDVDB, Backups. Ceny od 2 zł.</p>
+            </div>
         </div>
     </div>
 
     <div id="shop" class="view">
-        <h2>Zamów artykuły elektroniczne</h2>
-        
-        <div class="list-item">
-            <div><strong>FMCB Card (3-6 dni)</strong></div>
-            <div>
-                <select id="fmcb-fast">
-                    <option value="50">8MB - 50zł</option>
-                    <option value="55">16MB - 55zł</option>
-                    <option value="65">32MB - 65zł</option>
-                    <option value="80">64MB - 80zł</option>
-                    <option value="100">128MB - 100zł</option>
-                </select>
-                <button class="buy-btn" onclick="addToCart('FMCB Card (Szybka)', 'fmcb-fast')">Dodaj</button>
-            </div>
+        <h2>Artykuły Elektroniczne</h2>
+        <div class="product-list-card" onclick="openProduct('fmcb-fast')">
+            <div class="img-preview"><i class="fas fa-sd-card"></i></div>
+            <div><h3>FMCB Card (3-6 dni)</h3><p>Dostawa ekspresowa. Od 50 zł.</p></div>
         </div>
-
-        <div class="list-item">
-            <div><strong>FMCB Card (9-13 dni)</strong></div>
-            <div>
-                <select id="fmcb-slow">
-                    <option value="30">8MB - 30zł</option>
-                    <option value="40">16MB - 40zł</option>
-                    <option value="50">32MB - 50zł</option>
-                    <option value="60">64MB - 60zł</option>
-                    <option value="70">128MB - 70zł</option>
-                </select>
-                <button class="buy-btn" onclick="addToCart('FMCB Card (Ekonomiczna)', 'fmcb-slow')">Dodaj</button>
-            </div>
+        <div class="product-list-card" onclick="openProduct('fmcb-slow')">
+            <div class="img-preview"><i class="fas fa-truck-loading"></i></div>
+            <div><h3>FMCB Card (9-13 dni)</h3><p>Oszczędzasz na cenie. Od 30 zł.</p></div>
         </div>
-
-        <div class="list-item">
-            <div><strong>Custom PS2 Pendrive (9-14 dni)</strong></div>
-            <div>
-                <select id="pendrive-choice">
-                    <option value="15">32GB - 15zł</option>
-                    <option value="30">64GB - 30zł</option>
-                    <option value="50">128GB - 50zł</option>
-                    <option value="75">256GB - 75zł</option>
-                    <option value="100">512GB - 100zł</option>
-                    <option value="150">1TB - 150zł</option>
-                    <option value="250">2TB - 250zł</option>
-                </select>
-                <button class="buy-btn" onclick="addToCart('Pendrive z grami', 'pendrive-choice')">Dodaj</button>
-            </div>
+        <div class="product-list-card" onclick="openProduct('pendrive')">
+            <div class="img-preview"><i class="fas fa-hdd"></i></div>
+            <div><h3>Custom PS2 Pendrive</h3><p>Zestawy gier. Od 15 zł.</p></div>
         </div>
-
-        <div class="list-item">
-            <span>FDVDB Disc DVD (2-4 dni) - <strong>20zł</strong></span>
-            <button class="buy-btn" onclick="addSimpleToCart('FDVDB Disc', 20)">Dodaj</button>
-        </div>
-
-        <div class="list-item">
-            <span>Pudełko CD/DVD/BR (2-4 dni) - <strong>3zł</strong></span>
-            <button class="buy-btn" onclick="addSimpleToCart('Pudełko Box', 3)">Dodaj</button>
+        <div class="product-list-card" onclick="openProduct('boxes')">
+            <div class="img-preview"><i class="fas fa-box-open"></i></div>
+            <div><h3>Pudełka CD/DVD/BR</h3><p>Ochrona Twoich gier. 3 zł.</p></div>
         </div>
     </div>
 
-    <div id="menu-ps2" class="view">
-        <span class="back-link" onclick="showView('home')">← Wróć</span>
-        <h2>Serwis PlayStation 2:</h2>
-        <div class="list-item"><span>FMCB Card (Usługa)</span> <span>+20zł <button class="buy-btn" onclick="addSimpleToCart('Usługa FMCB', 20)">Dodaj</button></span></div>
-        <div class="list-item"><span>FDVDB (Usługa)</span> <span>+20zł <button class="buy-btn" onclick="addSimpleToCart('Usługa FDVDB', 20)">Dodaj</button></span></div>
-        <div class="list-item"><span>DVD Backups (za szt.)</span> <span>+15zł <button class="buy-btn" onclick="addSimpleToCart('DVD Backup', 15)">Dodaj</button></span></div>
-        <div class="list-item"><span>Pendrive Backups</span> <span>+2zł <button class="buy-btn" onclick="addSimpleToCart('Pendrive Backup', 2)">Dodaj</button></span></div>
+    <div id="product-view" class="view">
+        <span class="back-btn" onclick="showView('shop')">← Wróć do listy</span>
+        <div class="product-profile" id="product-content">
+            </div>
     </div>
 
     <div id="cart" class="view">
         <h2>Twój Koszyk</h2>
-        <div id="cart-list"></div>
-        <hr style="border: 0; border-top: 1px solid #334155; margin: 20px 0;">
-        <div style="font-size: 1.5rem; text-align: right;">Suma: <span id="cart-total">0</span> zł</div>
-        <button class="price-btn" onclick="checkout()">ZŁÓŻ ZAMÓWIENIE (PRZEZ KONTAKT)</button>
-        <button class="back-link" onclick="clearCart()" style="background:none; border:none; margin-top: 10px;">Wyczyść koszyk</button>
+        <div id="cart-items"></div>
+        <div class="price-big" style="text-align: right;">Suma: <span id="cart-total">0</span> zł</div>
+        <button class="buy-btn" onclick="showView('contact')">PRZEJDŹ DO KONTAKTU</button>
     </div>
 
     <div id="contact" class="view">
-        <div class="card">
-            <h2>Kontakt</h2>
-            <p>Discord: <strong>TwojaKsywka#0000</strong></p>
+        <div class="product-profile" style="text-align: center;">
+            <h2>Złóż zamówienie</h2>
+            <p>Wyślij mi screena koszyka na Discordzie:</p>
+            <p style="font-size: 1.5rem; color: var(--accent);">TwojaKsywka#0000</p>
             <p>Płatność: <strong>BLIK</strong></p>
-            <p>Wyślij mi screena swojego koszyka na Discordzie!</p>
         </div>
     </div>
 
-    <footer>&copy; 2026 RetroStocking | Sklep & Serwis</footer>
+    <footer>&copy; 2026 RetroStocking</footer>
 </div>
 
 <script>
     let cart = [];
-    let total = 0;
+    const products = {
+        'fmcb-fast': {
+            title: "FMCB Card (Szybka)", icon: "fa-sd-card", delivery: "3-6 dni", 
+            desc: "Oryginalna karta z wgranym Free McBoot. Najszybsza dostawa dla niecierpliwych.",
+            options: {"8MB": 50, "16MB": 55, "32MB": 65, "64MB": 80, "128MB": 100}
+        },
+        'fmcb-slow': {
+            title: "FMCB Card (Ekonomiczna)", icon: "fa-truck-loading", delivery: "9-13 dni",
+            desc: "Najlepszy stosunek ceny do jakości. Idealna jeśli możesz chwilę poczekać.",
+            options: {"8MB": 30, "16MB": 40, "32MB": 50, "64MB": 60, "128MB": 70}
+        },
+        'pendrive': {
+            title: "Custom PS2 Games Pendrive", icon: "fa-hdd", delivery: "9-14 dni",
+            desc: "Gotowy zestaw gier na Twoją konsolę. Plug & Play.",
+            options: {"32GB": 15, "64GB": 30, "128GB": 50, "256GB": 75, "512GB": 100, "1TB": 150, "2TB": 250}
+        },
+        'boxes': {
+            title: "Pudełka CD/DVD/BR", icon: "fa-box-open", delivery: "2-4 dni",
+            desc: "Standardowe pudełka chroniące Twoje kopie zapasowe przed rysami.",
+            options: {"1 sztuka": 3}
+        },
+        'usluga-ps2': {
+            title: "Modyfikacje PS2 (Usługi)", icon: "fa-tools", delivery: "Zależnie od ilości",
+            desc: "Serwis Twojego sprzętu i przygotowanie nośników.",
+            options: {"FMCB Card Usługa": 20, "FDVDB Usługa": 20, "DVD Backup (1szt)": 15, "Pendrive Backup": 2}
+        }
+    };
 
     function showView(id) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById(id).classList.add('active');
     }
 
-    function addToCart(name, selectId) {
-        let sel = document.getElementById(selectId);
-        let price = parseInt(sel.value);
-        let label = sel.options[sel.selectedIndex].text;
-        cart.push({name: name + " (" + label + ")", price: price});
-        updateCart();
+    function openProduct(id) {
+        const p = products[id];
+        let optionsHTML = '';
+        for (let label in p.options) {
+            optionsHTML += `<option value="${p.options[label]}">${label} - ${p.options[label]}zł</option>`;
+        }
+
+        document.getElementById('product-content').innerHTML = `
+            <div class="product-header">
+                <div class="main-img"><i class="fas ${p.icon}"></i></div>
+                <div>
+                    <div class="availability"><i class="fas fa-check"></i> Dostępny w magazynie</div>
+                    <h1>${p.title}</h1>
+                    <p style="color: #94a3b8;">Dostawa: ${p.delivery}</p>
+                    <div class="price-big" id="current-price">${Object.values(p.options)[0]} zł</div>
+                </div>
+            </div>
+            <h3>Opis produktu</h3>
+            <p>${p.desc}</p>
+            <label>Wybierz model/wariant:</label>
+            <select id="variant-select" onchange="updatePrice(this)">${optionsHTML}</select>
+            <button class="buy-btn" onclick="addToCart('${p.title}')">DODAJ DO KOSZYKA</button>
+        `;
+        showView('product-view');
     }
 
-    function addSimpleToCart(name, price) {
-        cart.push({name: name, price: price});
-        updateCart();
+    function updatePrice(el) {
+        document.getElementById('current-price').innerText = el.value + " zł";
     }
 
-    function updateCart() {
-        total = cart.reduce((sum, item) => sum + item.price, 0);
+    function addToCart(title) {
+        const sel = document.getElementById('variant-select');
+        const variant = sel.options[sel.selectedIndex].text;
+        const price = parseInt(sel.value);
+        cart.push({name: title + " (" + variant + ")", price: price});
+        updateUI();
+        alert("Dodano do koszyka!");
+    }
+
+    function updateUI() {
+        const total = cart.reduce((s, i) => s + i.price, 0);
         document.getElementById('cart-count').innerText = total;
         document.getElementById('cart-total').innerText = total;
-        
-        let list = document.getElementById('cart-list');
-        list.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <span>${item.name}</span>
-                <span>${item.price} zł</span>
-            </div>
+        document.getElementById('cart-items').innerHTML = cart.map(i => `
+            <div class="cart-item"><span>${i.name}</span><strong>${i.price} zł</strong></div>
         `).join('');
-    }
-
-    function clearCart() {
-        cart = [];
-        updateCart();
-    }
-
-    function checkout() {
-        if(cart.length === 0) return alert("Koszyk jest pusty!");
-        alert("Zrób teraz zdjęcie (screen) koszyka i wyślij mi go na Discordzie! Suma do zapłaty: " + total + " zł");
-        showView('contact');
     }
 </script>
 
