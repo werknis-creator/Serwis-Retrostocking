@@ -19,32 +19,24 @@
         .view.active { display: block; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* LISTA PRODUKTÓW */
-        .grid-header { border-bottom: 1px solid #334155; margin-bottom: 20px; padding-bottom: 10px; }
+        /* KARTY PRODUKTÓW */
         .product-list-card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #334155; margin-bottom: 15px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: 0.2s; }
         .product-list-card:hover { border-color: var(--accent); transform: scale(1.01); }
         .img-preview { width: 60px; height: 60px; background: #0f172a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent); }
 
-        /* PROFIL PRODUKTU */
-        .product-profile { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid #334155; }
+        /* PROFILE */
+        .profile-box { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid #334155; }
         .p-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; }
         @media (max-width: 600px) { .p-grid { grid-template-columns: 1fr; } }
-        
-        .main-img { aspect-ratio: 1; background: #0f172a; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--accent); border: 1px solid #334155; }
-        .price-tag { font-size: 1.8rem; font-weight: bold; color: var(--accent); margin: 10px 0; }
-        .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
-        .badge-green { background: rgba(16, 185, 129, 0.2); color: var(--green); }
-        
-        select, .btn-buy { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; }
-        select { background: #0f172a; color: white; border: 1px solid var(--accent); }
-        .btn-buy { background: var(--accent); color: var(--bg); border: none; transition: 0.3s; }
-        .btn-buy:hover { background: #7dd3fc; }
+        .main-img { aspect-ratio: 1; background: #0f172a; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--accent); }
 
-        /* KOSZYK */
-        .cart-item { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .back-btn { color: var(--accent); cursor: pointer; margin-bottom: 20px; display: inline-block; }
-        
-        footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.8rem; }
+        /* FORMULARZE */
+        input, select, .btn { width: 100%; padding: 12px; margin-top: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-weight: bold; box-sizing: border-box; }
+        .btn { background: var(--accent); color: var(--bg); border: none; cursor: pointer; text-transform: uppercase; }
+        .btn-green { background: var(--green); color: white; }
+
+        .cart-item { display: flex; justify-content: space-between; padding: 15px; background: #0f172a; margin-bottom: 5px; border-radius: 8px; }
+        .back-link { color: var(--accent); cursor: pointer; margin-bottom: 15px; display: inline-block; }
     </style>
 </head>
 <body>
@@ -52,93 +44,94 @@
 <div class="nav-bar">
     <div class="nav-link" onclick="showView('services')">Modyfikacje</div>
     <div class="nav-link" onclick="showView('shop')">Sklep</div>
-    <div class="nav-link" onclick="showView('contact')">Kontakt</div>
-    <div class="cart-status" onclick="showView('cart')"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span> zł</div>
+    <div class="cart-status" onclick="goToCart()"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span> zł</div>
 </div>
 
 <div class="container">
 
-    <div id="services" class="view active">
-        <h2 class="grid-header">Serwis i Softmod PS2</h2>
-        <div class="product-list-card" onclick="openProduct('u-fmcb')">
-            <div class="img-preview"><i class="fas fa-microchip"></i></div>
-            <div><h3>Usługa: FMCB Card</h3><p>Modyfikacja karty pamięci. +20 zł</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('u-fdvdb')">
-            <div class="img-preview"><i class="fas fa-compact-disc"></i></div>
-            <div><h3>Usługa: FDVDB</h3><p>Modyfikacja napędu DVD. +20 zł</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('u-dvd')">
-            <div class="img-preview"><i class="fas fa-copy"></i></div>
-            <div><h3>DVD Backups</h3><p>Kopia na płycie. 15 zł / szt.</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('u-pen')">
-            <div class="img-preview"><i class="fas fa-usb"></i></div>
-            <div><h3>Pendrive Backups</h3><p>Przygotowanie obrazów. +2 zł</p></div>
+    <div id="auth-view" class="view">
+        <div class="profile-box">
+            <h2>Zaloguj się lub Załóż konto</h2>
+            <input type="text" id="reg-name" placeholder="Nazwa użytkownika">
+            <input type="tel" id="reg-phone" placeholder="Numer telefonu">
+            <input type="password" id="reg-pass" placeholder="Hasło">
+            <button class="btn" onclick="startSms()">Zarejestruj się</button>
         </div>
     </div>
 
+    <div id="sms-view" class="view">
+        <div class="profile-box" style="text-align: center;">
+            <i class="fas fa-comment-dots" style="font-size: 3rem; color: var(--accent)"></i>
+            <h2>Potwierdź numer</h2>
+            <p>Wpisz kod wysłany SMSem:</p>
+            <input type="text" id="sms-code" placeholder="KOD SMS" style="text-align: center; font-size: 2rem;">
+            <button class="btn" onclick="confirmSms()">Potwierdź</button>
+        </div>
+    </div>
+
+    <div id="services" class="view active">
+        <h2>Usługi Serwisowe PS2</h2>
+        <div class="product-list-card" onclick="openProduct('u-fmcb')"><div class="img-preview"><i class="fas fa-microchip"></i></div><div><h3>Usługa FMCB</h3><p>+20 zł</p></div></div>
+        <div class="product-list-card" onclick="openProduct('u-fdvdb')"><div class="img-preview"><i class="fas fa-compact-disc"></i></div><div><h3>Usługa FDVDB</h3><p>+20 zł</p></div></div>
+        <div class="product-list-card" onclick="openProduct('u-dvd')"><div class="img-preview"><i class="fas fa-copy"></i></div><div><h3>DVD Backups</h3><p>15 zł / szt.</p></div></div>
+    </div>
+
     <div id="shop" class="view">
-        <h2 class="grid-header">Zamów artykuły elektroniczne</h2>
-        <div class="product-list-card" onclick="openProduct('fmcb-fast')">
-            <div class="img-preview"><i class="fas fa-bolt"></i></div>
-            <div><h3>FMCB Card (3-6 dni)</h3><p>Ekspresowa dostawa. Od 50 zł.</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('fmcb-slow')">
-            <div class="img-preview"><i class="fas fa-shuttle-van"></i></div>
-            <div><h3>FMCB Card (9-13 dni)</h3><p>Oszczędna opcja. Od 30 zł.</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('pen-games')">
-            <div class="img-preview"><i class="fas fa-hdd"></i></div>
-            <div><h3>Custom PS2 Pendrive</h3><p>Zestaw gier na USB. Od 15 zł.</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('fdvdb-disc')">
-            <div class="img-preview"><i class="fas fa-disc"></i></div>
-            <div><h3>FDVDB Disc DVD</h3><p>Gotowa płyta. 20 zł.</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('box')">
-            <div class="img-preview"><i class="fas fa-box"></i></div>
-            <div><h3>Pudełko CD/DVD/BR</h3><p>Etui na płyty. 3 zł.</p></div>
-        </div>
+        <h2>Zamów Artykuły</h2>
+        <div class="product-list-card" onclick="openProduct('f-fast')"><div class="img-preview"><i class="fas fa-bolt"></i></div><div><h3>FMCB Card (3-6 dni)</h3><p>Od 50 zł</p></div></div>
+        <div class="product-list-card" onclick="openProduct('f-slow')"><div class="img-preview"><i class="fas fa-truck"></i></div><div><h3>FMCB Card (9-13 dni)</h3><p>Od 30 zł</p></div></div>
+        <div class="product-list-card" onclick="openProduct('pen-games')"><div class="img-preview"><i class="fas fa-usb"></i></div><div><h3>Custom Pendrive</h3><p>Od 15 zł</p></div></div>
     </div>
 
     <div id="product-page" class="view">
         <div id="product-render"></div>
     </div>
 
-    <div id="cart" class="view">
+    <div id="cart-view" class="view">
         <h2>Twój Koszyk</h2>
-        <div id="cart-content"></div>
-        <div style="text-align: right; margin-top: 20px;">
-            <p style="font-size: 1.5rem;">Suma: <span id="total-val" style="color:var(--accent)">0</span> zł</p>
-            <button class="btn-buy" style="max-width: 300px;" onclick="showView('contact')">ZAMÓW PRZEZ DISCORD</button>
+        <div id="cart-items"></div>
+        <div class="cart-item" style="border: 1px solid var(--accent)"><span>Wysyłka InPost</span><strong>15 zł</strong></div>
+        <h2 style="text-align: right;">Suma: <span id="total-val">0</span> zł</h2>
+        
+        <div class="profile-box" style="margin-top: 20px;">
+            <h3>Dane do dostawy</h3>
+            <input type="text" id="ship-name" placeholder="Imię i Nazwisko">
+            <input type="text" id="ship-box" placeholder="Kod Paczkomatu InPost (np. WAW12M)">
+            <button class="btn btn-green" onclick="showView('blik-view')">Przejdź do płatności</button>
         </div>
     </div>
 
-    <div id="contact" class="view">
-        <div class="product-profile" style="text-align: center;">
-            <h2>Dokończ zamówienie</h2>
-            <p>Skopiuj listę z koszyka lub zrób screena i wyślij go tutaj:</p>
-            <h1 style="color:var(--accent)">TwojaKsywka#0000</h1>
-            <p>Metoda płatności: <strong>BLIK</strong></p>
+    <div id="blik-view" class="view">
+        <div class="profile-box" style="text-align: center;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/BLIK_logo.svg/1200px-BLIK_logo.svg.png" width="80">
+            <h2>Płatność BLIK</h2>
+            <p>Do zapłaty: <strong id="blik-sum">0</strong> zł</p>
+            <input type="text" id="blik-input" placeholder="KOD BLIK" style="text-align: center; font-size: 1.5rem;">
+            <button class="btn" onclick="finalProcess()">Zapłać teraz</button>
         </div>
     </div>
 
-    <footer>&copy; 2026 RetroStocking | Realizacja zamówień 24/7</footer>
+    <div id="success-view" class="view">
+        <div class="profile-box" style="text-align: center;">
+            <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--green)"></i>
+            <h2>Zamówienie złożone!</h2>
+            <p>Zamówienie zostanie wysłane w ciągu 24 godzin.</p>
+            <button class="btn" onclick="location.reload()">Wróć do startu</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    let basket = [];
+    let cart = [];
+    let loggedIn = false;
     const catalog = {
-        'u-fmcb': { title: "Usługa: FMCB Card", icon: "fa-microchip", del: "1-2 dni", desc: "Instalacja Free McBoot na Twojej karcie pamięci.", variants: {"Instalacja": 20}, stock: "Wysoka" },
-        'u-fdvdb': { title: "Usługa: FDVDB", icon: "fa-compact-disc", del: "1-2 dni", desc: "Modyfikacja umożliwiająca odpalanie kopii z płyt DVD.", variants: {"Instalacja": 20}, stock: "Dostępna" },
-        'u-dvd': { title: "DVD Backups", icon: "fa-copy", del: "2-4 dni", desc: "Wykonanie kopii zapasowej gry na wysokiej jakości nośniku DVD.", variants: {"1 sztuka": 15, "5 sztuk": 75, "10 sztuk": 150}, stock: "Dużo" },
-        'u-pen': { title: "Pendrive Backups", icon: "fa-usb", del: "1-2 dni", desc: "Przygotowanie Twojego pendrive pod obsługę gier w OPL.", variants: {"Konfiguracja": 2}, stock: "Dostępna" },
-        'fmcb-fast': { title: "FMCB Card (Szybka)", icon: "fa-bolt", del: "3-6 dni", desc: "Nowa karta pamięci z wgranym Softmodem. Szybka wysyłka krajowa.", variants: {"8MB": 50, "16MB": 55, "32MB": 65, "64MB": 80, "128MB": 100}, stock: "Na stanie" },
-        'fmcb-slow': { title: "FMCB Card (Ekono)", icon: "fa-shuttle-van", del: "9-13 dni", desc: "Ekonomiczna karta FMCB. Najlepsza cena.", variants: {"8MB": 30, "16MB": 40, "32MB": 50, "64MB": 60, "128MB": 70}, stock: "Oczekiwanie" },
-        'pen-games': { title: "Custom PS2 Pendrive", icon: "fa-hdd", del: "9-14 dni", desc: "Pendrive wypełniony grami wg Twojej listy. Gotowy do gry.", variants: {"32GB": 15, "64GB": 30, "128GB": 50, "256GB": 75, "512GB": 100, "1TB": 150, "2TB": 250}, stock: "Dostępne" },
-        'fdvdb-disc': { title: "FDVDB Disc DVD", icon: "fa-disc", del: "2-4 dni", desc: "Płyta instalacyjna/uruchomieniowa FDVDB.", variants: {"Standard": 20}, stock: "Wysoka" },
-        'box': { title: "Pudełko CD/DVD/BR", icon: "fa-box", del: "2-4 dni", desc: "Solidne etui chroniące Twoje nośniki.", variants: {"1 sztuka": 3, "10 sztuk": 30}, stock: "Wysoka" }
+        'u-fmcb': { title: "Usługa FMCB", icon: "fa-microchip", del: "1-2 dni", desc: "Instalacja FMCB na Twojej karcie.", variants: {"Instalacja": 20} },
+        'u-fdvdb': { title: "Usługa FDVDB", icon: "fa-compact-disc", del: "1-2 dni", desc: "Modyfikacja napędu DVD.", variants: {"Instalacja": 20} },
+        'u-dvd': { title: "DVD Backups", icon: "fa-copy", del: "2-4 dni", desc: "Kopia zapasowa na DVD.", variants: {"1 sztuka": 15, "5 sztuk": 75} },
+        'f-fast': { title: "FMCB Card (Szybka)", icon: "fa-bolt", del: "3-6 dni", desc: "Nowa karta, szybka wysyłka.", variants: {"8MB": 50, "16MB": 55, "32MB": 65, "64MB": 80, "128MB": 100} },
+        'f-slow': { title: "FMCB Card (Ekono)", icon: "fa-truck", del: "9-13 dni", desc: "Ekonomiczna karta FMCB.", variants: {"8MB": 30, "16MB": 40, "32MB": 50, "64MB": 60, "128MB": 70} },
+        'pen-games': { title: "Custom Pendrive", icon: "fa-usb", del: "9-14 dni", desc: "Zestaw gier na USB.", variants: {"32GB": 15, "64GB": 30, "128GB": 50, "256GB": 75, "512GB": 100, "1TB": 150} }
     };
 
     function showView(id) {
@@ -149,52 +142,71 @@
 
     function openProduct(id) {
         const p = catalog[id];
-        let options = '';
-        for (let name in p.variants) {
-            options += `<option value="${p.variants[name]}">${name} - ${p.variants[name]}zł</option>`;
-        }
-
+        let opts = '';
+        for (let n in p.variants) opts += `<option value="${p.variants[n]}">${n} - ${p.variants[n]}zł</option>`;
+        
         document.getElementById('product-render').innerHTML = `
-            <span class="back-btn" onclick="showView('shop')">← Wróć do listy</span>
-            <div class="product-profile">
+            <span class="back-link" onclick="showView('services')">← Wróć</span>
+            <div class="profile-box">
                 <div class="p-grid">
                     <div class="main-img"><i class="fas ${p.icon}"></i></div>
                     <div>
-                        <div class="badge badge-green">Dostępność: ${p.stock}</div>
                         <h1>${p.title}</h1>
-                        <p style="color: #94a3b8">Czas dostawy: <strong>${p.del}</strong></p>
-                        <div class="price-tag" id="price-display">${Object.values(p.variants)[0]} zł</div>
-                        <label>Wybierz model/opcję:</label>
-                        <select id="sel-variant" onchange="document.getElementById('price-display').innerText=this.value+' zł'">${options}</select>
-                        <button class="btn-buy" onclick="add('${p.title}')">DODAJ DO KOSZYKA</button>
+                        <p>Dostawa: ${p.del}</p>
+                        <div style="font-size: 1.5rem; color: var(--accent); margin: 10px 0;">Cena: <span id="p-val">${Object.values(p.variants)[0]}</span> zł</div>
+                        <select id="p-sel" onchange="document.getElementById('p-val').innerText=this.value">${opts}</select>
+                        <button class="btn" onclick="addToCart('${p.title}')">Dodaj do koszyka</button>
                     </div>
                 </div>
-                <hr style="border:0; border-top:1px solid #334155; margin: 25px 0;">
-                <h3>Szczegóły produktu</h3>
-                <p style="color: #cbd5e1; line-height: 1.6;">${p.desc}</p>
-            </div>
-        `;
+                <p style="margin-top:20px;">${p.desc}</p>
+            </div>`;
         showView('product-page');
     }
 
-    function add(title) {
-        const s = document.getElementById('sel-variant');
-        const variantName = s.options[s.selectedIndex].text;
-        basket.push({ item: title + " (" + variantName + ")", price: parseInt(s.value) });
-        sync();
-        alert("Produkt trafił do koszyka!");
+    function addToCart(title) {
+        const s = document.getElementById('p-sel');
+        cart.push({ name: title + " (" + s.options[s.selectedIndex].text + ")", price: parseInt(s.value) });
+        updateCartUI();
+        alert("Dodano!");
     }
 
-    function sync() {
-        const sum = basket.reduce((a, b) => a + b.price, 0);
-        document.getElementById('cart-count').innerText = sum;
-        document.getElementById('total-val').innerText = sum;
-        document.getElementById('cart-content').innerHTML = basket.map((v, index) => `
-            <div class="cart-item">
-                <span>${v.item}</span>
-                <strong>${v.price} zł</strong>
-            </div>
-        `).join('') || '<p>Twój koszyk jest pusty.</p>';
+    function updateCartUI() {
+        const sub = cart.reduce((a, b) => a + b.price, 0);
+        const total = sub + (cart.length > 0 ? 15 : 0);
+        document.getElementById('cart-count').innerText = sub;
+        document.getElementById('total-val').innerText = total;
+        document.getElementById('blik-sum').innerText = total;
+        document.getElementById('cart-items').innerHTML = cart.map(i => `<div class="cart-item"><span>${i.name}</span><strong>${i.price} zł</strong></div>`).join('');
+    }
+
+    function goToCart() {
+        if (!loggedIn) showView('auth-view');
+        else showView('cart-view');
+    }
+
+    function startSms() {
+        if(document.getElementById('reg-phone').value.length < 9) return alert("Błędny numer!");
+        showView('sms-view');
+    }
+
+    function confirmSms() {
+        loggedIn = true;
+        showView('cart-view');
+    }
+
+    function finalProcess() {
+        if(document.getElementById('blik-input').value.length !== 6) return alert("Podaj 6 cyfr BLIK!");
+        
+        // Dane do logów / maila
+        const orderData = {
+            user: document.getElementById('reg-name').value,
+            phone: document.getElementById('reg-phone').value,
+            address: document.getElementById('ship-box').value,
+            items: cart,
+            total: document.getElementById('total-val').innerText
+        };
+        console.log("ZAMÓWIENIE:", orderData);
+        showView('success-view');
     }
 </script>
 
