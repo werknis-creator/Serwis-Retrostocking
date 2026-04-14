@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RetroStocking | Sklep & Serwis</title>
+    <title>RetroStocking | Sklep</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; --green: #10b981; --red: #ef4444; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
         
-        /* NAWIGACJA */
         .nav-bar { background: #1e293b; padding: 15px; display: flex; justify-content: center; gap: 20px; border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
         .nav-link { color: var(--text); cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; text-decoration: none; }
         .cart-status { position: absolute; right: 20px; color: var(--accent); font-weight: bold; cursor: pointer; }
@@ -20,13 +19,11 @@
         .view.active { display: block; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* LISTA PRODUKTÓW */
         .grid-header { border-bottom: 1px solid #334155; margin-bottom: 20px; padding-bottom: 10px; }
         .product-list-card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #334155; margin-bottom: 15px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: 0.2s; }
         .product-list-card:hover { border-color: var(--accent); transform: scale(1.01); }
         .img-preview { width: 60px; height: 60px; background: #0f172a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent); }
 
-        /* FORMULARZE */
         input, select, .btn-buy { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; box-sizing: border-box; }
         input { background: #0f172a; color: white; border: 1px solid #334155; }
         select { background: #0f172a; color: white; border: 1px solid var(--accent); }
@@ -34,7 +31,6 @@
         .btn-buy:hover { background: #7dd3fc; }
         .input-label { display: block; margin-top: 15px; font-size: 0.9rem; color: #94a3b8; }
 
-        /* PROFIL PRODUKTU */
         .product-profile { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid #334155; }
         .p-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; }
         @media (max-width: 600px) { .p-grid { grid-template-columns: 1fr; } }
@@ -44,11 +40,9 @@
         .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
         .badge-green { background: rgba(16, 185, 129, 0.2); color: var(--green); }
         
-        /* KOSZYK */
         .cart-item { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .back-btn { color: var(--accent); cursor: pointer; margin-bottom: 20px; display: inline-block; }
         
-        /* BLIK MODAL */
         .blik-box { background: white; color: black; padding: 30px; border-radius: 20px; text-align: center; max-width: 300px; margin: 0 auto; }
         .blik-logo { color: #eb0029; font-weight: 900; font-style: italic; font-size: 2rem; }
 
@@ -58,7 +52,6 @@
 <body>
 
 <div class="nav-bar">
-    <div class="nav-link" onclick="showView('services')">Modyfikacje</div>
     <div class="nav-link" onclick="showView('shop')">Sklep</div>
     <div class="nav-link" onclick="showView('contact')">Kontakt</div>
     <div id="user-display" class="nav-link" style="color:var(--green)">Gość</div>
@@ -70,7 +63,6 @@
     <div id="auth" class="view">
         <div class="product-profile" style="max-width: 400px; margin: 0 auto;">
             <h2>Zaloguj się / Rejestracja</h2>
-            <p>Musisz posiadać konto, aby kontynuować zakupy.</p>
             <label class="input-label">Nazwa konta</label>
             <input type="text" id="reg-name" placeholder="Twoja ksywka">
             <label class="input-label">Numer telefonu</label>
@@ -85,53 +77,33 @@
         <div class="product-profile" style="max-width: 400px; margin: 0 auto; text-align: center;">
             <i class="fas fa-sms" style="font-size: 3rem; color: var(--accent);"></i>
             <h2>Weryfikacja numeru</h2>
-            <p>Wysłaliśmy kod SMS na podany numer (Symulacja: wpisz 1234)</p>
-            <input type="text" id="sms-code" placeholder="Wpisz kod" style="text-align: center; font-size: 1.5rem; letter-spacing: 5px;">
+            <p>Wpisz kod: <strong>1234</strong></p>
+            <input type="text" id="sms-code" placeholder="Kod SMS">
             <button class="btn-buy" onclick="verifySMS()">POTWIERDŹ</button>
         </div>
     </div>
 
-    <div id="services" class="view active">
-        <h2 class="grid-header">Serwis i Softmod PS2</h2>
-        <div class="product-list-card" onclick="openProduct('u-fmcb')">
-            <div class="img-preview"><i class="fas fa-microchip"></i></div>
-            <div><h3>Usługa: FMCB Card</h3><p>Modyfikacja karty pamięci. +20 zł</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('u-fdvdb')">
-            <div class="img-preview"><i class="fas fa-compact-disc"></i></div>
-            <div><h3>Usługa: FDVDB</h3><p>Modyfikacja napędu DVD. +20 zł</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('u-dvd')">
-            <div class="img-preview"><i class="fas fa-copy"></i></div>
-            <div><h3>DVD Backups</h3><p>Kopia na płycie. 15 zł / szt.</p></div>
-        </div>
-        <div class="product-list-card" onclick="openProduct('u-pen')">
-            <div class="img-preview"><i class="fas fa-usb"></i></div>
-            <div><h3>Pendrive Backups</h3><p>Przygotowanie obrazów. +2 zł</p></div>
-        </div>
-    </div>
-
-    <div id="shop" class="view">
-        <h2 class="grid-header">Zamów artykuły elektroniczne</h2>
+    <div id="shop" class="view active">
+        <h2 class="grid-header">Dostępne produkty</h2>
         <div class="product-list-card" onclick="openProduct('fmcb-fast')">
             <div class="img-preview"><i class="fas fa-bolt"></i></div>
-            <div><h3>FMCB Card (3-6 dni)</h3><p>Ekspresowa dostawa. Od 50 zł.</p></div>
+            <div><h3>FMCB Card (Szybka)</h3><p>Wysyłka krajowa. Dostawa: 6 dni.</p></div>
         </div>
         <div class="product-list-card" onclick="openProduct('fmcb-slow')">
             <div class="img-preview"><i class="fas fa-shuttle-van"></i></div>
-            <div><h3>FMCB Card (9-13 dni)</h3><p>Oszczędna opcja. Od 30 zł.</p></div>
+            <div><h3>FMCB Card (Ekono)</h3><p>Oszczędna opcja. Dostawa: 13 dni.</p></div>
         </div>
         <div class="product-list-card" onclick="openProduct('pen-games')">
             <div class="img-preview"><i class="fas fa-hdd"></i></div>
-            <div><h3>Custom PS2 Pendrive</h3><p>Zestaw gier na USB. Od 15 zł.</p></div>
+            <div><h3>Custom PS2 Pendrive</h3><p>Zestaw gier USB. Dostawa: 14 dni.</p></div>
         </div>
         <div class="product-list-card" onclick="openProduct('fdvdb-disc')">
             <div class="img-preview"><i class="fas fa-disc"></i></div>
-            <div><h3>FDVDB Disc DVD</h3><p>Gotowa płyta. 20 zł.</p></div>
+            <div><h3>FDVDB Disc DVD</h3><p>Gotowa płyta. Dostawa: 4 dni.</p></div>
         </div>
         <div class="product-list-card" onclick="openProduct('box')">
             <div class="img-preview"><i class="fas fa-box"></i></div>
-            <div><h3>Pudełko CD/DVD/BR</h3><p>Etui na płyty. 3 zł.</p></div>
+            <div><h3>Pudełko CD/DVD/BR</h3><p>Etui ochronne. Dostawa: 4 dni.</p></div>
         </div>
     </div>
 
@@ -143,78 +115,71 @@
         <h2>Twój Koszyk</h2>
         <div id="cart-content"></div>
         <div style="text-align: right; margin-top: 20px; border-top: 1px solid #334155; padding-top: 10px;">
+            <p id="est-delivery" style="color: #94a3b8">Czas dostawy całego zamówienia: <strong>-</strong></p>
             <p>Dostawa InPost: 15 zł</p>
-            <p style="font-size: 1.5rem;">Suma całkowita: <span id="total-val" style="color:var(--accent)">0</span> zł</p>
-            <button class="btn-buy" style="max-width: 300px;" onclick="checkOrderFlow()">PRZEJDŹ DO DOSTAWY</button>
+            <p style="font-size: 1.5rem;">Suma: <span id="total-val" style="color:var(--accent)">0</span> zł</p>
+            <button class="btn-buy" style="max-width: 300px;" onclick="checkOrderFlow()">DANE DO WYSYŁKI</button>
         </div>
     </div>
 
     <div id="shipping" class="view">
         <div class="product-profile">
-            <h2>Dane do wysyłki (InPost)</h2>
+            <h2>Dane InPost</h2>
             <label class="input-label">Imię i Nazwisko</label>
             <input type="text" id="ship-name">
-            <label class="input-label">Kod Paczkomatu lub Adres domowy</label>
-            <input type="text" id="ship-address" placeholder="np. MAZ01M lub ul. Kwiatowa 1, 00-001 Mińsk">
-            <button class="btn-buy" onclick="showView('blik-payment')">PRZEJDŹ DO PŁATNOŚCI BLIK</button>
+            <label class="input-label">Paczkomat lub Adres</label>
+            <input type="text" id="ship-address">
+            <button class="btn-buy" onclick="showView('blik-payment')">PŁATNOŚĆ BLIK</button>
         </div>
     </div>
 
     <div id="blik-payment" class="view">
         <div class="blik-box">
             <div class="blik-logo">BLIK</div>
-            <p>RetroStocking Electronics</p>
+            <p>RetroStocking</p>
             <h2 id="blik-amount">0.00 zł</h2>
-            <input type="number" id="blik-code" placeholder="KOD BLIK" style="color:black; border: 2px solid #ccc; text-align: center; font-size: 1.5rem;">
-            <button class="btn-buy" style="background:#eb0029; color:white;" onclick="processPayment()">ZAPŁAĆ</button>
+            <input type="number" id="blik-code" placeholder="KOD BLIK" style="color:black; text-align: center;">
+            <button class="btn-buy" style="background:#eb0029; color:white;" onclick="processPayment()">ZAPŁAĆ TERAZ</button>
         </div>
     </div>
 
     <div id="order-success" class="view">
-        <div class="product-profile" style="text-align: center; border-color: var(--green);">
+        <div class="product-profile" style="text-align: center;">
             <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--green);"></i>
             <h1>Zamówienie złożone!</h1>
-            <p>Płatność zaakceptowana. Zamówienie zostanie wysłane w ciągu 24 godzin.</p>
-            <button class="btn-buy" onclick="location.reload()">WRÓĆ DO SKLEPU</button>
+            <p>Wysłka w ciągu 24h. Potwierdzenie poszło do admina.</p>
+            <button class="btn-buy" onclick="location.reload()">OK</button>
         </div>
     </div>
 
     <div id="contact" class="view">
         <div class="product-profile" style="text-align: center;">
             <h2>Kontakt</h2>
-            <p>W razie pytań zapraszamy na Discord:</p>
+            <p>Discord:</p>
             <h1 style="color:var(--accent)">TwojaKsywka#0000</h1>
         </div>
     </div>
 
-    <footer>&copy; 2026 RetroStocking | Realizacja zamówień 24/7</footer>
+    <footer>&copy; 2026 RetroStocking | Sklep z elektroniką konsolową</footer>
 </div>
 
 <script>
-    // --- KONFIGURACJA E-MAIL ---
-    // Musisz założyć darmowe konto na emailjs.com i podać te dane:
-    const EMAILJS_PUBLIC_KEY = "TWOJ_KLUCZ"; 
-    const EMAILJS_SERVICE_ID = "service_id";
-    const EMAILJS_TEMPLATE_ID = "template_id";
-    const MOJ_EMAIL = "twoj-email@gmail.com"; // Twój adres docelowy
+    // Konfiguracja Twojego maila
+    const MOJ_EMAIL = "twoj-email@gmail.com"; 
 
     let basket = [];
     let currentUser = JSON.parse(localStorage.getItem('user')) || null;
     const shippingCost = 15;
 
+    // Słownik produktów z czasem dostawy zapisanym jako liczba (dni)
     const catalog = {
-        'u-fmcb': { title: "Usługa: FMCB Card", icon: "fa-microchip", del: "1-2 dni", desc: "Instalacja Free McBoot na Twojej karcie pamięci.", variants: {"Instalacja": 20}, stock: "Wysoka" },
-        'u-fdvdb': { title: "Usługa: FDVDB", icon: "fa-compact-disc", del: "1-2 dni", desc: "Modyfikacja umożliwiająca odpalanie kopii z płyt DVD.", variants: {"Instalacja": 20}, stock: "Dostępna" },
-        'u-dvd': { title: "DVD Backups", icon: "fa-copy", del: "2-4 dni", desc: "Wykonanie kopii zapasowej gry na wysokiej jakości nośniku DVD.", variants: {"1 sztuka": 15, "5 sztuk": 75, "10 sztuk": 150}, stock: "Dużo" },
-        'u-pen': { title: "Pendrive Backups", icon: "fa-usb", del: "1-2 dni", desc: "Przygotowanie Twojego pendrive pod obsługę gier w OPL.", variants: {"Konfiguracja": 2}, stock: "Dostępna" },
-        'fmcb-fast': { title: "FMCB Card (Szybka)", icon: "fa-bolt", del: "3-6 dni", desc: "Nowa karta pamięci z wgranym Softmodem. Szybka wysyłka krajowa.", variants: {"8MB": 50, "16MB": 55, "32MB": 65, "64MB": 80, "128MB": 100}, stock: "Na stanie" },
-        'fmcb-slow': { title: "FMCB Card (Ekono)", icon: "fa-shuttle-van", del: "9-13 dni", desc: "Ekonomiczna karta FMCB. Najlepsza cena.", variants: {"8MB": 30, "16MB": 40, "32MB": 50, "64MB": 60, "128MB": 70}, stock: "Oczekiwanie" },
-        'pen-games': { title: "Custom PS2 Pendrive", icon: "fa-hdd", del: "9-14 dni", desc: "Pendrive wypełniony grami wg Twojej listy. Gotowy do gry.", variants: {"32GB": 15, "64GB": 30, "128GB": 50, "256GB": 75, "512GB": 100, "1TB": 150, "2TB": 250}, stock: "Dostępne" },
-        'fdvdb-disc': { title: "FDVDB Disc DVD", icon: "fa-disc", del: "2-4 dni", desc: "Płyta instalacyjna/uruchomieniowa FDVDB.", variants: {"Standard": 20}, stock: "Wysoka" },
-        'box': { title: "Pudełko CD/DVD/BR", icon: "fa-box", del: "2-4 dni", desc: "Solidne etui chroniące Twoje nośniki.", variants: {"1 sztuka": 3, "10 sztuk": 30}, stock: "Wysoka" }
+        'fmcb-fast': { title: "FMCB Card (Szybka)", icon: "fa-bolt", delDays: 6, desc: "Szybka karta z Softmodem.", variants: {"8MB": 50, "64MB": 80}, stock: "Na stanie" },
+        'fmcb-slow': { title: "FMCB Card (Ekono)", icon: "fa-shuttle-van", delDays: 13, desc: "Ekonomiczna karta FMCB.", variants: {"8MB": 30, "64MB": 60}, stock: "Wysoka" },
+        'pen-games': { title: "Custom PS2 Pendrive", icon: "fa-hdd", delDays: 14, desc: "USB z grami wg listy.", variants: {"64GB": 30, "128GB": 50, "512GB": 100}, stock: "Dostępne" },
+        'fdvdb-disc': { title: "FDVDB Disc DVD", icon: "fa-disc", delDays: 4, desc: "Płyta instalacyjna FDVDB.", variants: {"Standard": 20}, stock: "Wysoka" },
+        'box': { title: "Pudełko CD/DVD/BR", icon: "fa-box", delDays: 4, desc: "Etui ochronne.", variants: {"1 sztuka": 3, "10 sztuk": 30}, stock: "Wysoka" }
     };
 
-    // Inicjalizacja użytkownika przy starcie
     if(currentUser) document.getElementById('user-display').innerText = currentUser.name;
 
     function showView(id) {
@@ -223,121 +188,110 @@
         window.scrollTo(0,0);
     }
 
-    // --- LOGIKA KONTA ---
     function handleAuth() {
         const name = document.getElementById('reg-name').value;
         const phone = document.getElementById('reg-phone').value;
         const pass = document.getElementById('reg-pass').value;
-
-        if(!name || !phone || !pass) return alert("Wypełnij wszystkie pola!");
-        
-        // Zapisujemy tymczasowo i przechodzimy do weryfikacji
+        if(!name || !phone || !pass) return alert("Wypełnij dane!");
         window.tempUser = { name, phone, pass };
         showView('verification');
     }
 
     function verifySMS() {
-        const code = document.getElementById('sms-code').value;
-        if(code === "1234") {
+        if(document.getElementById('sms-code').value === "1234") {
             currentUser = window.tempUser;
             localStorage.setItem('user', JSON.stringify(currentUser));
             document.getElementById('user-display').innerText = currentUser.name;
-            alert("Telefon potwierdzony!");
             showView('shop');
-        } else {
-            alert("Błędny kod!");
-        }
+        } else alert("Zły kod!");
     }
 
     function checkOrderFlow() {
-        if(basket.length === 0) return alert("Koszyk jest pusty!");
-        if(!currentUser) {
-            showView('auth');
-        } else {
-            showView('shipping');
-        }
+        if(basket.length === 0) return alert("Pusto!");
+        currentUser ? showView('shipping') : showView('auth');
     }
 
-    // --- LOGIKA SKLEPU ---
     function openProduct(id) {
         const p = catalog[id];
-        let options = '';
-        for (let name in p.variants) {
-            options += `<option value="${p.variants[name]}">${name} - ${p.variants[name]}zł</option>`;
-        }
+        let opts = '';
+        for (let name in p.variants) opts += `<option value="${p.variants[name]}">${name} - ${p.variants[name]}zł</option>`;
 
         document.getElementById('product-render').innerHTML = `
-            <span class="back-btn" onclick="showView('shop')">← Wróć do listy</span>
+            <span class="back-btn" onclick="showView('shop')">← Wróć</span>
             <div class="product-profile">
                 <div class="p-grid">
                     <div class="main-img"><i class="fas ${p.icon}"></i></div>
                     <div>
                         <div class="badge badge-green">Dostępność: ${p.stock}</div>
                         <h1>${p.title}</h1>
-                        <p style="color: #94a3b8">Czas dostawy: <strong>${p.del}</strong></p>
+                        <p style="color: #94a3b8">Czas oczekiwania: do <strong>${p.delDays} dni</strong></p>
                         <div class="price-tag" id="price-display">${Object.values(p.variants)[0]} zł</div>
-                        <label>Wybierz model/opcję:</label>
-                        <select id="sel-variant" onchange="document.getElementById('price-display').innerText=this.value+' zł'">${options}</select>
-                        <button class="btn-buy" onclick="add('${p.title}')">DODAJ DO KOSZYKA</button>
+                        <select id="sel-variant" onchange="document.getElementById('price-display').innerText=this.value+' zł'">${opts}</select>
+                        <button class="btn-buy" onclick="add('${id}')">DODAJ DO KOSZYKA</button>
                     </div>
                 </div>
-                <hr style="border:0; border-top:1px solid #334155; margin: 25px 0;">
-                <h3>Szczegóły produktu</h3>
-                <p style="color: #cbd5e1; line-height: 1.6;">${p.desc}</p>
             </div>
         `;
         showView('product-page');
     }
 
-    function add(title) {
+    function add(id) {
+        const p = catalog[id];
         const s = document.getElementById('sel-variant');
-        const variantName = s.options[s.selectedIndex].text;
-        basket.push({ item: title + " (" + variantName + ")", price: parseInt(s.value) });
+        basket.push({ 
+            title: p.title, 
+            variant: s.options[s.selectedIndex].text, 
+            price: parseInt(s.value),
+            del: p.delDays 
+        });
         sync();
-        alert("Produkt trafił do koszyka!");
+        alert("Dodano!");
     }
 
     function sync() {
         const itemsSum = basket.reduce((a, b) => a + b.price, 0);
         const total = itemsSum + (basket.length > 0 ? shippingCost : 0);
         
+        // Logika NAJDŁUŻSZEJ dostawy
+        let maxDel = 0;
+        if(basket.length > 0) {
+            maxDel = Math.max(...basket.map(i => i.del));
+        }
+
         document.getElementById('cart-count').innerText = total;
         document.getElementById('total-val').innerText = total;
         document.getElementById('blik-amount').innerText = total.toFixed(2) + " zł";
+        document.getElementById('est-delivery').innerHTML = basket.length > 0 ? `Czas dostawy całego zamówienia: <strong>${maxDel} dni</strong>` : "";
         
-        document.getElementById('cart-content').innerHTML = basket.map((v, index) => `
+        document.getElementById('cart-content').innerHTML = basket.map(v => `
             <div class="cart-item">
-                <span>${v.item}</span>
+                <span>${v.title} (${v.variant})</span>
                 <strong>${v.price} zł</strong>
             </div>
-        `).join('') || '<p>Twój koszyk jest pusty.</p>';
+        `).join('') || '<p>Koszyk jest pusty.</p>';
     }
 
-    // --- FINALIZACJA ---
     function processPayment() {
         const blik = document.getElementById('blik-code').value;
-        if(blik.length !== 6) return alert("Podaj prawidłowy 6-cyfrowy kod BLIK!");
+        if(blik.length !== 6) return alert("Zły kod BLIK!");
 
-        const orderDetails = basket.map(i => i.item).join(", ");
-        const total = document.getElementById('total-val').innerText;
-        const shipData = document.getElementById('ship-name').value + " | " + document.getElementById('ship-address').value;
+        const orderInfo = basket.map(i => i.title + " " + i.variant).join(", ");
+        const finalPrice = document.getElementById('total-val').innerText;
+        const shipInfo = document.getElementById('ship-name').value + " | " + document.getElementById('ship-address').value;
 
-        // Tutaj symulujemy wysyłkę e-mail do Ciebie
-        console.log("Wysyłanie zamówienia do:", MOJ_EMAIL);
-        console.log("Treść:", orderDetails, "Suma:", total, "Klient:", currentUser.name, "Tel:", currentUser.phone, "Adres:", shipData);
+        // Raport dla Ciebie (do maila)
+        const emailBody = `
+            NOWE ZAMÓWIENIE:
+            Klient: ${currentUser.name}
+            Telefon: ${currentUser.phone}
+            Produkty: ${orderInfo}
+            Suma: ${finalPrice} zł
+            Adres: ${shipInfo}
+        `;
 
-        // Opcjonalna integracja z EmailJS (wymaga Twoich kluczy)
-        /*
-        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-            to_email: MOJ_EMAIL,
-            customer_name: currentUser.name,
-            customer_phone: currentUser.phone,
-            order_items: orderDetails,
-            total_price: total,
-            shipping_address: shipData
-        });
-        */
-
+        console.log("WYSYŁANIE DO " + MOJ_EMAIL, emailBody);
+        
+        // Tutaj można podpiąć EmailJS analogicznie jak wcześniej
         showView('order-success');
         basket = [];
         sync();
