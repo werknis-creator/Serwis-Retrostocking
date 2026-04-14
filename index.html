@@ -1,57 +1,210 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dev & Retro | Usługi IT</title>
-<style>
-:root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetroStocking | Professional Console Service</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #020617;
+            --card: #0f172a;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.3);
+            --text: #f1f5f9;
+        }
 
-body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; line-
-height: 1.6; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            line-height: 1.6;
+        }
 
-.container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-header { text-align: center; padding: 60px 20px; }
-h1 { color: var(--accent); font-size: 2.5rem; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:
-20px; }
-.card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid
-#334155; transition: 0.3s; }
-.card:hover { border-color: var(--accent); transform: translateY(-5px); }
-.price { color: var(--accent); font-weight: bold; font-size: 1.3rem; display: block; margin:
-15px 0; }
-.btn { display: block; background: var(--accent); color: var(--bg); text-align: center;
-padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; }
-.contact { background: var(--card); padding: 30px; border-radius: 12px; margin-top: 40px;
-text-align: center; border: 1px dashed var(--accent); }
-</style>
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+        header {
+            text-align: center;
+            padding: 80px 20px;
+            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: -40px;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #1e293b;
+            transition: 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .price-tag {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            display: block;
+            margin: 20px 0;
+        }
+
+        .btn {
+            display: block;
+            background: var(--accent);
+            color: var(--bg);
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        /* MODAL STYLE */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: var(--card);
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .console-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .console-item {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+
+        .console-item:hover {
+            border-color: var(--accent);
+            background: #334155;
+        }
+
+        .close-btn {
+            float: right;
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 1.5rem;
+        }
+
+        .footer { text-align: center; padding: 60px; color: #64748b; }
+    </style>
 </head>
 <body>
-<div class="container">
+
 <header>
-<h1>Ekspert IT & Retro Konsole</h1>
-<p>Programowanie | Konfiguracja | Optymalizacja</p>
+    <h1>RETRO STOCKING</h1>
+    <p>Premium Console Modification & Software</p>
 </header>
-<div class="grid">
-<div class="card">
-<h3>Konfiguracja Kart SD/R4</h3>
-<p>Pełne przygotowanie softu pod Nintendo DS, Wii, PS2. Emulatory i systemy.</p>
-<span class="price">od 35 PLN</span>
-<a href="mailto:twoj@email.pl" class="btn">Zamów przez BLIK</a>
+
+<div class="container">
+    <div class="grid">
+        <div class="card">
+            <i class="fas fa-gamepad" style="font-size: 2rem; color: var(--accent)"></i>
+            <h3>Konfiguracja Kart SD / R4</h3>
+            <p>Optymalizacja systemu, emulatory, autorskie menu. Wyciśnij 100% ze swojej konsoli.</p>
+            <span class="price-tag">35 PLN</span>
+            <button class="btn" onclick="openModal()">Rozpocznij Konfigurację</button>
+        </div>
+
+        <div class="card">
+            <i class="fas fa-code" style="font-size: 2rem; color: var(--accent)"></i>
+            <h3>Aplikacje i Skrypty</h3>
+            <p>Automatyzacja procesów, porządkowanie bibliotek gier, skrypty Python na zamówienie.</p>
+            <span class="price-tag">Wycena indywidualna</span>
+            <a href="mailto:twoj@email.pl" class="btn" style="background: transparent; border: 1px solid var(--accent); color: var(--accent)">Napisz do mnie</a>
+        </div>
+    </div>
 </div>
-<div class="card">
-<h3>Aplikacje i Skrypty</h3>
-<p>Automatyzacja zadań w Pythonie, porządkowanie baz plików i narzędzia na
-zamówienie.</p>
-<span class="price">Wycena indywidualna</span>
-<a href="mailto:twoj@email.pl" class="btn">Napisz do mnie</a>
+
+<div id="consoleModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h2>Wybierz swoją konsolę</h2>
+        <p>Wybierz sprzęt, który chcesz skonfigurować:</p>
+        <div class="console-list">
+            <div class="console-item" onclick="selectConsole('PS2')"><i class="fab fa-playstation"></i><br>PS2</div>
+            <div class="console-item" onclick="selectConsole('Xbox Classic')"><i class="fab fa-xbox"></i><br>Xbox Classic</div>
+            <div class="console-item" onclick="selectConsole('Nintendo Wii')"><i class="fas fa-gamepad"></i><br>Wii</div>
+            <div class="console-item" onclick="selectConsole('Nintendo DS')"><i class="fas fa-mobile-alt"></i><br>DS</div>
+            <div class="console-item" onclick="selectConsole('Sega Dreamcast')"><i class="fas fa-compact-disc"></i><br>Dreamcast</div>
+        </div>
+    </div>
 </div>
+
+<div class="footer">
+    &copy; 2026 RetroStocking | Płatność BLIK | Kontakt: discord_user#0000
 </div>
-<div class="contact">
-<h2>Szybki Kontakt</h2>
-<p>Płatność: BLIK na telefon | Realizacja: Zdalnie</p>
-<p>Discord: twoja_nazwa#0000 | Email: twoj@email.pl</p>
-</div>
-</div>
+
+<script>
+    function openModal() {
+        document.getElementById("consoleModal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("consoleModal").style.display = "none";
+    }
+
+    function selectConsole(name) {
+        alert("Wybrałeś: " + name + ". Napisz do mnie na Discord/Email, aby sfinalizować zamówienie!");
+        closeModal();
+    }
+
+    // Zamknij po kliknięciu poza okno
+    window.onclick = function(event) {
+        if (event.target == document.getElementById("consoleModal")) {
+            closeModal();
+        }
+    }
+</script>
+
 </body>
 </html>
