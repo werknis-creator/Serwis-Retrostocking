@@ -3,206 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RetroStocking | Professional Console Service</title>
+    <title>RetroStocking | Serwis</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg: #020617;
-            --card: #0f172a;
+            --bg: #0f172a;
+            --card: #1e293b;
             --accent: #38bdf8;
-            --accent-glow: rgba(56, 189, 248, 0.3);
             --text: #f1f5f9;
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
 
-        header {
-            text-align: center;
-            padding: 80px 20px;
-            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+        /* NAGŁÓWEK */
+        header { text-align: center; padding: 60px 20px; }
+        h1 { color: var(--accent); font-size: 2.5rem; margin: 0; }
+
+        /* SYSTEM WIDOKÓW */
+        .view { display: none; animation: fadeIn 0.3s ease; }
+        .view.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        header h1 {
-            font-size: 3rem;
-            margin: 0;
-            color: var(--accent);
-            text-shadow: 0 0 20px var(--accent-glow);
-        }
-
+        /* STRONA GŁÓWNA - KARTY */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
-            margin-top: -40px;
         }
 
         .card {
             background: var(--card);
             padding: 30px;
             border-radius: 16px;
-            border: 1px solid #1e293b;
-            transition: 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .price-tag {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent);
-            display: block;
-            margin: 20px 0;
-        }
-
-        .btn {
-            display: block;
-            background: var(--accent);
-            color: var(--bg);
-            text-align: center;
-            padding: 15px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
+            border: 1px solid #334155;
             cursor: pointer;
-            border: none;
-            width: 100%;
-            font-size: 1rem;
+            transition: 0.3s;
         }
 
-        /* MODAL STYLE */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
-        }
+        .card:hover { border-color: var(--accent); transform: scale(1.02); }
 
-        .modal-content {
-            background-color: var(--card);
-            margin: 10% auto;
-            padding: 30px;
-            border: 1px solid var(--accent);
-            border-radius: 20px;
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-        }
+        .price { color: var(--accent); font-size: 1.5rem; font-weight: bold; margin: 15px 0; display: block; }
 
-        .console-list {
+        /* EKRAN WYBORU KONSOLI */
+        .console-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-top: 20px;
+            margin-top: 30px;
         }
 
-        .console-item {
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 10px;
+        .console-btn {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            text-align: center;
             cursor: pointer;
-            border: 1px solid transparent;
             transition: 0.2s;
         }
 
-        .console-item:hover {
-            border-color: var(--accent);
-            background: #334155;
-        }
+        .console-btn:hover { background: var(--accent); color: var(--bg); font-weight: bold; }
+        .console-btn i { font-size: 2rem; margin-bottom: 10px; display: block; }
 
-        .close-btn {
-            float: right;
+        .back-btn {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            color: var(--muted);
-            font-size: 1.5rem;
+            margin-bottom: 20px;
         }
 
-        .footer { text-align: center; padding: 60px; color: #64748b; }
+        footer { text-align: center; padding: 40px; color: #64748b; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>RETRO STOCKING</h1>
-    <p>Premium Console Modification & Software</p>
-</header>
-
 <div class="container">
-    <div class="grid">
-        <div class="card">
-            <i class="fas fa-gamepad" style="font-size: 2rem; color: var(--accent)"></i>
-            <h3>Konfiguracja Kart SD / R4</h3>
-            <p>Optymalizacja systemu, emulatory, autorskie menu. Wyciśnij 100% ze swojej konsoli.</p>
-            <span class="price-tag">35 PLN</span>
-            <button class="btn" onclick="openModal()">Rozpocznij Konfigurację</button>
-        </div>
+    <header>
+        <h1>RETRO STOCKING</h1>
+        <p>Twoje centrum modyfikacji konsol</p>
+    </header>
 
-        <div class="card">
-            <i class="fas fa-code" style="font-size: 2rem; color: var(--accent)"></i>
-            <h3>Aplikacje i Skrypty</h3>
-            <p>Automatyzacja procesów, porządkowanie bibliotek gier, skrypty Python na zamówienie.</p>
-            <span class="price-tag">Wycena indywidualna</span>
-            <a href="mailto:twoj@email.pl" class="btn" style="background: transparent; border: 1px solid var(--accent); color: var(--accent)">Napisz do mnie</a>
-        </div>
-    </div>
-</div>
+    <div id="homeView" class="view active">
+        <div class="grid">
+            <div class="card" onclick="showView('consoleView')">
+                <i class="fas fa-tools" style="font-size: 2rem; color: var(--accent)"></i>
+                <h3>Konfiguracja Kart SD / R4</h3>
+                <p>Przygotowanie optymalnego oprogramowania pod Twoją konsolę.</p>
+                <span class="price">35 PLN</span>
+                <div style="background: var(--accent); color: var(--bg); padding: 10px; text-align: center; border-radius: 5px; font-weight: bold;">ZAMÓW TERAZ</div>
+            </div>
 
-<div id="consoleModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        <h2>Wybierz swoją konsolę</h2>
-        <p>Wybierz sprzęt, który chcesz skonfigurować:</p>
-        <div class="console-list">
-            <div class="console-item" onclick="selectConsole('PS2')"><i class="fab fa-playstation"></i><br>PS2</div>
-            <div class="console-item" onclick="selectConsole('Xbox Classic')"><i class="fab fa-xbox"></i><br>Xbox Classic</div>
-            <div class="console-item" onclick="selectConsole('Nintendo Wii')"><i class="fas fa-gamepad"></i><br>Wii</div>
-            <div class="console-item" onclick="selectConsole('Nintendo DS')"><i class="fas fa-mobile-alt"></i><br>DS</div>
-            <div class="console-item" onclick="selectConsole('Sega Dreamcast')"><i class="fas fa-compact-disc"></i><br>Dreamcast</div>
+            <div class="card">
+                <i class="fas fa-file-code" style="font-size: 2rem; color: var(--accent)"></i>
+                <h3>Skrypty i Projekty</h3>
+                <p>Automatyzacja i narzędzia programistyczne na zamówienie.</p>
+                <span class="price">Wycena</span>
+                <p style="color: var(--accent)">Kontakt: email@domena.pl</p>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="footer">
-    &copy; 2026 RetroStocking | Płatność BLIK | Kontakt: discord_user#0000
+    <div id="consoleView" class="view">
+        <button class="back-btn" onclick="showView('homeView')">← Powrót</button>
+        <h2>Wybierz swoją konsolę:</h2>
+        <div class="console-grid">
+            <div class="console-btn" onclick="order('PS2')"><i class="fab fa-playstation"></i>PS2</div>
+            <div class="console-btn" onclick="order('Xbox Classic')"><i class="fab fa-xbox"></i>Xbox Classic</div>
+            <div class="console-btn" onclick="order('Wii')"><i class="fas fa-gamepad"></i>Nintendo Wii</div>
+            <div class="console-btn" onclick="order('DS')"><i class="fas fa-tablet-alt"></i>Nintendo DS</div>
+            <div class="console-btn" onclick="order('Dreamcast')"><i class="fas fa-compact-disc"></i>Sega Dreamcast</div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 RetroStocking | Płatność BLIK | Kontakt: TwojaKsywka#0000
+    </footer>
 </div>
 
 <script>
-    function openModal() {
-        document.getElementById("consoleModal").style.display = "block";
+    // Funkcja zmieniająca widoki (jak na YouTube)
+    function showView(viewId) {
+        // Ukryj wszystkie widoki
+        document.querySelectorAll('.view').forEach(view => {
+            view.classList.remove('active');
+        });
+        // Pokaż wybrany widok
+        document.getElementById(viewId).classList.add('active');
+        // Przewiń na górę strony
+        window.scrollTo(0, 0);
     }
 
-    function closeModal() {
-        document.getElementById("consoleModal").style.display = "none";
-    }
-
-    function selectConsole(name) {
-        alert("Wybrałeś: " + name + ". Napisz do mnie na Discord/Email, aby sfinalizować zamówienie!");
-        closeModal();
-    }
-
-    // Zamknij po kliknięciu poza okno
-    window.onclick = function(event) {
-        if (event.target == document.getElementById("consoleModal")) {
-            closeModal();
-        }
+    // Funkcja finalizująca zamówienie
+    function order(consoleName) {
+        alert("Wybrałeś: " + consoleName + ". Skontaktuj się ze mną na Discord lub Email, aby dokończyć zamówienie!");
+        showView('homeView'); // Powrót na główną po kliknięciu
     }
 </script>
 
