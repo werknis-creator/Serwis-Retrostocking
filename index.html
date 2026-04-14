@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RetroStocking | Sklep & Serwis</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; --green: #10b981; }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; --green: #10b981; --red: #ef4444; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
         
         /* NAWIGACJA */
@@ -25,6 +26,14 @@
         .product-list-card:hover { border-color: var(--accent); transform: scale(1.01); }
         .img-preview { width: 60px; height: 60px; background: #0f172a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent); }
 
+        /* FORMULARZE */
+        input, select, .btn-buy { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; box-sizing: border-box; }
+        input { background: #0f172a; color: white; border: 1px solid #334155; }
+        select { background: #0f172a; color: white; border: 1px solid var(--accent); }
+        .btn-buy { background: var(--accent); color: var(--bg); border: none; transition: 0.3s; margin-top: 15px; }
+        .btn-buy:hover { background: #7dd3fc; }
+        .input-label { display: block; margin-top: 15px; font-size: 0.9rem; color: #94a3b8; }
+
         /* PROFIL PRODUKTU */
         .product-profile { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid #334155; }
         .p-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; }
@@ -35,15 +44,14 @@
         .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
         .badge-green { background: rgba(16, 185, 129, 0.2); color: var(--green); }
         
-        select, .btn-buy { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; }
-        select { background: #0f172a; color: white; border: 1px solid var(--accent); }
-        .btn-buy { background: var(--accent); color: var(--bg); border: none; transition: 0.3s; }
-        .btn-buy:hover { background: #7dd3fc; }
-
         /* KOSZYK */
         .cart-item { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .back-btn { color: var(--accent); cursor: pointer; margin-bottom: 20px; display: inline-block; }
         
+        /* BLIK MODAL */
+        .blik-box { background: white; color: black; padding: 30px; border-radius: 20px; text-align: center; max-width: 300px; margin: 0 auto; }
+        .blik-logo { color: #eb0029; font-weight: 900; font-style: italic; font-size: 2rem; }
+
         footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.8rem; }
     </style>
 </head>
@@ -53,10 +61,35 @@
     <div class="nav-link" onclick="showView('services')">Modyfikacje</div>
     <div class="nav-link" onclick="showView('shop')">Sklep</div>
     <div class="nav-link" onclick="showView('contact')">Kontakt</div>
+    <div id="user-display" class="nav-link" style="color:var(--green)">Gość</div>
     <div class="cart-status" onclick="showView('cart')"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span> zł</div>
 </div>
 
 <div class="container">
+
+    <div id="auth" class="view">
+        <div class="product-profile" style="max-width: 400px; margin: 0 auto;">
+            <h2>Zaloguj się / Rejestracja</h2>
+            <p>Musisz posiadać konto, aby kontynuować zakupy.</p>
+            <label class="input-label">Nazwa konta</label>
+            <input type="text" id="reg-name" placeholder="Twoja ksywka">
+            <label class="input-label">Numer telefonu</label>
+            <input type="tel" id="reg-phone" placeholder="123456789">
+            <label class="input-label">Hasło</label>
+            <input type="password" id="reg-pass" placeholder="********">
+            <button class="btn-buy" onclick="handleAuth()">ZAREJESTRUJ / ZALOGUJ</button>
+        </div>
+    </div>
+
+    <div id="verification" class="view">
+        <div class="product-profile" style="max-width: 400px; margin: 0 auto; text-align: center;">
+            <i class="fas fa-sms" style="font-size: 3rem; color: var(--accent);"></i>
+            <h2>Weryfikacja numeru</h2>
+            <p>Wysłaliśmy kod SMS na podany numer (Symulacja: wpisz 1234)</p>
+            <input type="text" id="sms-code" placeholder="Wpisz kod" style="text-align: center; font-size: 1.5rem; letter-spacing: 5px;">
+            <button class="btn-buy" onclick="verifySMS()">POTWIERDŹ</button>
+        </div>
+    </div>
 
     <div id="services" class="view active">
         <h2 class="grid-header">Serwis i Softmod PS2</h2>
@@ -109,18 +142,48 @@
     <div id="cart" class="view">
         <h2>Twój Koszyk</h2>
         <div id="cart-content"></div>
-        <div style="text-align: right; margin-top: 20px;">
-            <p style="font-size: 1.5rem;">Suma: <span id="total-val" style="color:var(--accent)">0</span> zł</p>
-            <button class="btn-buy" style="max-width: 300px;" onclick="showView('contact')">ZAMÓW PRZEZ DISCORD</button>
+        <div style="text-align: right; margin-top: 20px; border-top: 1px solid #334155; padding-top: 10px;">
+            <p>Dostawa InPost: 15 zł</p>
+            <p style="font-size: 1.5rem;">Suma całkowita: <span id="total-val" style="color:var(--accent)">0</span> zł</p>
+            <button class="btn-buy" style="max-width: 300px;" onclick="checkOrderFlow()">PRZEJDŹ DO DOSTAWY</button>
+        </div>
+    </div>
+
+    <div id="shipping" class="view">
+        <div class="product-profile">
+            <h2>Dane do wysyłki (InPost)</h2>
+            <label class="input-label">Imię i Nazwisko</label>
+            <input type="text" id="ship-name">
+            <label class="input-label">Kod Paczkomatu lub Adres domowy</label>
+            <input type="text" id="ship-address" placeholder="np. MAZ01M lub ul. Kwiatowa 1, 00-001 Mińsk">
+            <button class="btn-buy" onclick="showView('blik-payment')">PRZEJDŹ DO PŁATNOŚCI BLIK</button>
+        </div>
+    </div>
+
+    <div id="blik-payment" class="view">
+        <div class="blik-box">
+            <div class="blik-logo">BLIK</div>
+            <p>RetroStocking Electronics</p>
+            <h2 id="blik-amount">0.00 zł</h2>
+            <input type="number" id="blik-code" placeholder="KOD BLIK" style="color:black; border: 2px solid #ccc; text-align: center; font-size: 1.5rem;">
+            <button class="btn-buy" style="background:#eb0029; color:white;" onclick="processPayment()">ZAPŁAĆ</button>
+        </div>
+    </div>
+
+    <div id="order-success" class="view">
+        <div class="product-profile" style="text-align: center; border-color: var(--green);">
+            <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--green);"></i>
+            <h1>Zamówienie złożone!</h1>
+            <p>Płatność zaakceptowana. Zamówienie zostanie wysłane w ciągu 24 godzin.</p>
+            <button class="btn-buy" onclick="location.reload()">WRÓĆ DO SKLEPU</button>
         </div>
     </div>
 
     <div id="contact" class="view">
         <div class="product-profile" style="text-align: center;">
-            <h2>Dokończ zamówienie</h2>
-            <p>Skopiuj listę z koszyka lub zrób screena i wyślij go tutaj:</p>
+            <h2>Kontakt</h2>
+            <p>W razie pytań zapraszamy na Discord:</p>
             <h1 style="color:var(--accent)">TwojaKsywka#0000</h1>
-            <p>Metoda płatności: <strong>BLIK</strong></p>
         </div>
     </div>
 
@@ -128,7 +191,17 @@
 </div>
 
 <script>
+    // --- KONFIGURACJA E-MAIL ---
+    // Musisz założyć darmowe konto na emailjs.com i podać te dane:
+    const EMAILJS_PUBLIC_KEY = "TWOJ_KLUCZ"; 
+    const EMAILJS_SERVICE_ID = "service_id";
+    const EMAILJS_TEMPLATE_ID = "template_id";
+    const MOJ_EMAIL = "twoj-email@gmail.com"; // Twój adres docelowy
+
     let basket = [];
+    let currentUser = JSON.parse(localStorage.getItem('user')) || null;
+    const shippingCost = 15;
+
     const catalog = {
         'u-fmcb': { title: "Usługa: FMCB Card", icon: "fa-microchip", del: "1-2 dni", desc: "Instalacja Free McBoot na Twojej karcie pamięci.", variants: {"Instalacja": 20}, stock: "Wysoka" },
         'u-fdvdb': { title: "Usługa: FDVDB", icon: "fa-compact-disc", del: "1-2 dni", desc: "Modyfikacja umożliwiająca odpalanie kopii z płyt DVD.", variants: {"Instalacja": 20}, stock: "Dostępna" },
@@ -141,12 +214,51 @@
         'box': { title: "Pudełko CD/DVD/BR", icon: "fa-box", del: "2-4 dni", desc: "Solidne etui chroniące Twoje nośniki.", variants: {"1 sztuka": 3, "10 sztuk": 30}, stock: "Wysoka" }
     };
 
+    // Inicjalizacja użytkownika przy starcie
+    if(currentUser) document.getElementById('user-display').innerText = currentUser.name;
+
     function showView(id) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         window.scrollTo(0,0);
     }
 
+    // --- LOGIKA KONTA ---
+    function handleAuth() {
+        const name = document.getElementById('reg-name').value;
+        const phone = document.getElementById('reg-phone').value;
+        const pass = document.getElementById('reg-pass').value;
+
+        if(!name || !phone || !pass) return alert("Wypełnij wszystkie pola!");
+        
+        // Zapisujemy tymczasowo i przechodzimy do weryfikacji
+        window.tempUser = { name, phone, pass };
+        showView('verification');
+    }
+
+    function verifySMS() {
+        const code = document.getElementById('sms-code').value;
+        if(code === "1234") {
+            currentUser = window.tempUser;
+            localStorage.setItem('user', JSON.stringify(currentUser));
+            document.getElementById('user-display').innerText = currentUser.name;
+            alert("Telefon potwierdzony!");
+            showView('shop');
+        } else {
+            alert("Błędny kod!");
+        }
+    }
+
+    function checkOrderFlow() {
+        if(basket.length === 0) return alert("Koszyk jest pusty!");
+        if(!currentUser) {
+            showView('auth');
+        } else {
+            showView('shipping');
+        }
+    }
+
+    // --- LOGIKA SKLEPU ---
     function openProduct(id) {
         const p = catalog[id];
         let options = '';
@@ -186,15 +298,49 @@
     }
 
     function sync() {
-        const sum = basket.reduce((a, b) => a + b.price, 0);
-        document.getElementById('cart-count').innerText = sum;
-        document.getElementById('total-val').innerText = sum;
+        const itemsSum = basket.reduce((a, b) => a + b.price, 0);
+        const total = itemsSum + (basket.length > 0 ? shippingCost : 0);
+        
+        document.getElementById('cart-count').innerText = total;
+        document.getElementById('total-val').innerText = total;
+        document.getElementById('blik-amount').innerText = total.toFixed(2) + " zł";
+        
         document.getElementById('cart-content').innerHTML = basket.map((v, index) => `
             <div class="cart-item">
                 <span>${v.item}</span>
                 <strong>${v.price} zł</strong>
             </div>
         `).join('') || '<p>Twój koszyk jest pusty.</p>';
+    }
+
+    // --- FINALIZACJA ---
+    function processPayment() {
+        const blik = document.getElementById('blik-code').value;
+        if(blik.length !== 6) return alert("Podaj prawidłowy 6-cyfrowy kod BLIK!");
+
+        const orderDetails = basket.map(i => i.item).join(", ");
+        const total = document.getElementById('total-val').innerText;
+        const shipData = document.getElementById('ship-name').value + " | " + document.getElementById('ship-address').value;
+
+        // Tutaj symulujemy wysyłkę e-mail do Ciebie
+        console.log("Wysyłanie zamówienia do:", MOJ_EMAIL);
+        console.log("Treść:", orderDetails, "Suma:", total, "Klient:", currentUser.name, "Tel:", currentUser.phone, "Adres:", shipData);
+
+        // Opcjonalna integracja z EmailJS (wymaga Twoich kluczy)
+        /*
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            to_email: MOJ_EMAIL,
+            customer_name: currentUser.name,
+            customer_phone: currentUser.phone,
+            order_items: orderDetails,
+            total_price: total,
+            shipping_address: shipData
+        });
+        */
+
+        showView('order-success');
+        basket = [];
+        sync();
     }
 </script>
 
